@@ -113,6 +113,7 @@ function ControlModule.new()
 	self.vehicleController = nil
 
 	self.touchControlFrame = nil
+	self.currentTorsoAngle = 0
 
 	if FFlagUserHideControlsWhenMenuOpen then
 		GuiService.MenuOpened:Connect(function()
@@ -164,10 +165,10 @@ function ControlModule.new()
 	self.touchGui = nil
 	self.playerGuiAddedConn = nil
 
-		GuiService:GetPropertyChangedSignal("TouchControlsEnabled"):Connect(function()
-			self:UpdateTouchGuiVisibility()
-			self:UpdateActiveControlModuleEnabled()
-		end)
+	GuiService:GetPropertyChangedSignal("TouchControlsEnabled"):Connect(function()
+		self:UpdateTouchGuiVisibility()
+		self:UpdateActiveControlModuleEnabled()
+	end)
 
 	if UserInputService.TouchEnabled then
 		self.playerGui = Players.LocalPlayer:FindFirstChildOfClass("PlayerGui")
@@ -200,6 +201,63 @@ function ControlModule:GetMoveVector(): Vector3
 		return self.activeController:GetMoveVector()
 	end
 	return Vector3.new(0,0,0)
+end
+
+local function NormalizeAngle(angle): number
+	angle = (angle + math.pi*4) % (math.pi*2)
+	if angle > math.pi then
+		angle = angle - math.pi*2
+	end
+	return angle
+end
+
+local function AverageAngle(angleA, angleB): number
+	local difference = NormalizeAngle(angleB - angleA)
+	return NormalizeAngle(angleA + difference/2)
+end
+
+function ControlModule:GetEstimatedVRTorsoFrame(): CFrame
+	local headFrame = VRService:GetUserCFrame(Enum.UserCFrame.Head)
+	local _, headAngle, _ = headFrame:ToEulerAnglesYXZ()
+	headAngle = -headAngle
+	if not VRService:GetUserCFrameEnabled(Enum.UserCFrame.RightHand) or 
+		not VRService:GetUserCFrameEnabled(Enum.UserCFrame.LeftHand) then
+		self.currentTorsoAngle = headAngle;
+	else	
+		local leftHandPos = VRService:GetUserCFrame(Enum.UserCFrame.LeftHand)
+		local rightHandPos = VRService:GetUserCFrame(Enum.UserCFrame.RightHand)
+
+		local leftHandToHead = headFrame.Position - leftHandPos.Position
+		local rightHandToHead = headFrame.Position - rightHandPos.Position
+		local leftHandAngle = -math.atan2(leftHandToHead.X, leftHandToHead.Z)
+		local rightHandAngle = -math.atan2(rightHandToHead.X, rightHandToHead.Z)
+		local averageHandAngle = AverageAngle(leftHandAngle, rightHandAngle)
+
+		local headAngleRelativeToCurrentAngle = NormalizeAngle(headAngle - self.currentTorsoAngle)
+		local averageHandAngleRelativeToCurrentAngle = NormalizeAngle(averageHandAngle - self.currentTorsoAngle)
+
+		local averageHandAngleValid =
+			averageHandAngleRelativeToCurrentAngle > -math.pi/2 and
+			averageHandAngleRelativeToCurrentAngle < math.pi/2
+		
+		if not averageHandAngleValid then
+			averageHandAngleRelativeToCurrentAngle = headAngleRelativeToCurrentAngle
+		end
+		
+		local minimumValidAngle = math.min(averageHandAngleRelativeToCurrentAngle, headAngleRelativeToCurrentAngle)
+		local maximumValidAngle = math.max(averageHandAngleRelativeToCurrentAngle, headAngleRelativeToCurrentAngle)
+
+		local relativeAngleToUse = 0
+		if minimumValidAngle > 0 then
+			relativeAngleToUse = minimumValidAngle
+		elseif maximumValidAngle < 0 then
+			relativeAngleToUse = maximumValidAngle
+		end
+
+		self.currentTorsoAngle = relativeAngleToUse + self.currentTorsoAngle
+	end
+
+	return CFrame.new(headFrame.Position) * CFrame.fromEulerAnglesYXZ(0, -self.currentTorsoAngle, 0)
 end
 
 function ControlModule:GetActiveController()
@@ -247,7 +305,7 @@ function ControlModule:UpdateActiveControlModuleEnabled()
 	-- GuiService.TouchControlsEnabled == false and the active controller is a touch controller,
 	-- disable controls
 	if not GuiService.TouchControlsEnabled and UserInputService.TouchEnabled and
-			(self.activeControlModule == ClickToMove or self.activeControlModule == TouchThumbstick or
+		(self.activeControlModule == ClickToMove or self.activeControlModule == TouchThumbstick or
 			self.activeControlModule == DynamicThumbstick) then
 		disable()
 		return
@@ -333,24 +391,52 @@ function ControlModule:SelectTouchModule(): ({}?, boolean)
 	return touchModule, true
 end
 
-local function calculateRawMoveVector(humanoid: Humanoid, cameraRelativeMoveVector: Vector3): Vector3
+local function getGamepadRightThumbstickPosition(): Vector3
+	local state = UserInputService:GetGamepadState(Enum.UserInputType.Gamepad1)
+	for _, input in pairs(state) do
+		if input.KeyCode == Enum.KeyCode.Thumbstick2 then
+			return input.Position
+		end
+	end
+	return Vector3.new(0,0,0)
+end
+
+function ControlModule:calculateRawMoveVector(humanoid: Humanoid, cameraRelativeMoveVector: Vector3): Vector3
 	local camera = Workspace.CurrentCamera
 	if not camera then
 		return cameraRelativeMoveVector
 	end
-
-	if humanoid:GetState() == Enum.HumanoidStateType.Swimming then
-		return camera.CFrame:VectorToWorldSpace(cameraRelativeMoveVector)
-	end
-
 	local cameraCFrame = camera.CFrame
 
 	if VRService.VREnabled and humanoid.RootPart then
+		local vrFrame = VRService:GetUserCFrame(Enum.UserCFrame.Head)
+		
+		vrFrame = self:GetEstimatedVRTorsoFrame()
+					
 		-- movement relative to VR frustum
-		local cameraDelta = humanoid.RootPart.CFrame.Position - cameraCFrame.Position
+		local cameraDelta = camera.Focus.Position - cameraCFrame.Position
 		if cameraDelta.Magnitude < 3 then -- "nearly" first person
-			local vrFrame = VRService:GetUserCFrame(Enum.UserCFrame.Head)
 			cameraCFrame = cameraCFrame * vrFrame
+		else
+			cameraCFrame = camera.CFrame * (vrFrame.Rotation + vrFrame.Position * camera.HeadScale)
+		end
+	end
+
+	if humanoid:GetState() == Enum.HumanoidStateType.Swimming then	
+		if VRService.VREnabled then
+			cameraRelativeMoveVector = Vector3.new(cameraRelativeMoveVector.X, 0, cameraRelativeMoveVector.Z)
+			if cameraRelativeMoveVector.Magnitude < 0.01 then
+				return Vector3.zero
+			end
+
+			local pitch = -getGamepadRightThumbstickPosition().Y * math.rad(80)
+			local yawAngle = math.atan2(-cameraRelativeMoveVector.X, -cameraRelativeMoveVector.Z)
+			local _, cameraYaw, _ = cameraCFrame:ToEulerAnglesYXZ()
+			yawAngle += cameraYaw
+			local movementCFrame = CFrame.fromEulerAnglesYXZ(pitch, yawAngle, 0)
+			return movementCFrame.LookVector
+		else
+			return cameraCFrame:VectorToWorldSpace(cameraRelativeMoveVector)
 		end
 	end
 
@@ -406,10 +492,10 @@ function ControlModule:OnRenderStepped(dt)
 		-- Verification of vehicleConsumedInput is commented out to preserve legacy behavior,
 		-- in case some game relies on Humanoid.MoveDirection still being set while in a VehicleSeat
 		--if not vehicleConsumedInput then
-			if cameraRelative then
-				moveVector = calculateRawMoveVector(self.humanoid, moveVector)
-			end
-			self.moveFunction(Players.LocalPlayer, moveVector, false)
+		if cameraRelative then
+			moveVector = self:calculateRawMoveVector(self.humanoid, moveVector)
+		end
+		self.moveFunction(Players.LocalPlayer, moveVector, false)
 		--end
 
 		-- And make them jump if needed
@@ -495,8 +581,8 @@ function ControlModule:SwitchToController(controlModule)
 		self.activeControlModule = controlModule -- Only used to check if controller switch is necessary
 
 		if self.touchControlFrame and (self.activeControlModule == ClickToMove
-					or self.activeControlModule == TouchThumbstick
-					or self.activeControlModule == DynamicThumbstick) then
+			or self.activeControlModule == TouchThumbstick
+			or self.activeControlModule == DynamicThumbstick) then
 			if not self.controllers[TouchJump] then
 				self.controllers[TouchJump] = TouchJump.new()
 			end

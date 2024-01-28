@@ -8,6 +8,7 @@
 --]]
 
 -- Local private variables and constants
+
 local ZERO_VECTOR2 = Vector2.new(0,0)
 
 local tweenAcceleration = math.rad(220) -- Radians/Second^2
@@ -239,16 +240,6 @@ function ClassicCamera:Update()
 
 	self.lastUpdate = now
 	return newCameraCFrame, newCameraFocus
-end
-
-function ClassicCamera:EnterFirstPerson()
-	self.inFirstPerson = true
-	self:UpdateMouseBehavior()
-end
-
-function ClassicCamera:LeaveFirstPerson()
-	self.inFirstPerson = false
-	self:UpdateMouseBehavior()
 end
 
 return ClassicCamera

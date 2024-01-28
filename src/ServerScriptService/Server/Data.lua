@@ -2,7 +2,7 @@ local Data = {}
 
 local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
-local CopyTable = require(game.ReplicatedStorage.Module.Libary.CopyTable)
+local CopyTable = require(game.ReplicatedStorage.Libary.CopyTable)
 
 local Remotes = game.ReplicatedStorage:WaitForChild("Remote")
 --local Modules = game.ReplicatedStorage:WaitForChild("Modules")
@@ -14,8 +14,11 @@ function Data.new(Player)
 	local PData = {}
 	PData.Loaded = false
 	PData.BaseSettings = { 
-		Sneliki = 0,
-        CollectPassToken = 0,
+		Sneliki = 100,
+        CollectPassToken = 100,
+		HyderKillBlock = 100,
+		QuestAll = 100,
+
 
         ProductDonat = {
             [0000000] = true
@@ -26,8 +29,11 @@ function Data.new(Player)
         ['Bread'] = {NamberQuest = 1}
     }
 
-	PData.Bagers = {
+	PData.Equipment = {
 		Boot = ""
+	}
+	PData.Bagers = {
+		fasdfasd = true
 	}
 	function PData:Update(key, value)
 		PData[key] = value
@@ -48,8 +54,8 @@ end
 
 local AutoSaves = {}
 
-local MainKey = 'DataMainServerAlifa123'
-local ClientKey = 'DataMainClientAlifa123'
+local MainKey = 'DataMainServerAlifa1'
+local ClientKey = 'DataMainClientAlifa1'
 
 local DataStore2 = require(game.ServerScriptService.DataStore2)
 
