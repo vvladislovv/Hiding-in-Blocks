@@ -5,10 +5,11 @@ local Players = game:GetService("Players")
 local CopyTable = require(game.ReplicatedStorage.Module.Libary.CopyTable)
 
 local Remotes = game.ReplicatedStorage:WaitForChild("Remote")
---local Modules = game.ReplicatedStorage:WaitForChild("Modules")
+--local Modules = game.ReplicatedStorage:WaitForChild("Modules")`
 --local Items = require(Modules.Items)
 
 Data.PlayerData = {}
+
 
 function Data.new(Player)
 	local PData = {}
