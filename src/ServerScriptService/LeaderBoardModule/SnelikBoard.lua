@@ -7,7 +7,7 @@ local LeaderStore = DSS:GetOrderedDataStore("TestAlifa135")
 local AdminTable = require(game.ReplicatedStorage.Libary.TableAdminUser)
 
 local Holder = LeaderboardFolder.SurfaceGui:WaitForChild("Holder")
-local Template = script:WaitForChild("Template")
+local Template = game.ReplicatedStorage:WaitForChild("Template")
 
 local function ClearBoard()
 	for _, T in pairs(Holder:GetChildren()) do

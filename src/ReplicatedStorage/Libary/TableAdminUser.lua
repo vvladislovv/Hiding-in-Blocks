@@ -1,10 +1,11 @@
 local AdminTable = {}
 
 function AdminTable:TableAdmin(NameUser)
-    local Table = {
+    local NameUser = {
         ['vlad060108'] = false,
 	    ['BreadDev'] = false
     }
+
 end
 
 return AdminTable

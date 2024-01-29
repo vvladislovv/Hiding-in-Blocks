@@ -3,13 +3,13 @@
 local TimeBoard = {}
 local DSS = game:GetService("DataStoreService")
 local Players = game:GetService("Players")
-local LeaderboardFolder = workspace.Leadebord.SceedBorad.TimeBoard
+local LeaderboardFolder = workspace.Leadebord.SceedBorad.QuestBoard
 local DataSave = require(script.Parent.Parent.Server.Data)
 local LeaderStore = DSS:GetOrderedDataStore("TestAlifa135")
 local AdminTable = require(game.ReplicatedStorage.Libary.TableAdminUser)
 
 local Holder = LeaderboardFolder.SurfaceGui:WaitForChild("Holder")
-local Template = script:WaitForChild("Template")
+local Template = game.ReplicatedStorage:WaitForChild("Template")
 
 local function ClearBoard()
 	for _, T in pairs(Holder:GetChildren()) do
@@ -66,7 +66,7 @@ task.spawn(function()
 	while true do
 		for _, Player in pairs(Players:GetPlayers()) do
 			local PData = DataSave:Get(Player)
-			local Currency = PData.BaseSettings.CollectPassToken
+			local Currency = PData.BaseSettings.QuestAll
 			if not AdminTable[Player.Name] then
 				LeaderStore:SetAsync(Player.UserId, math.floor(Currency))
 			else

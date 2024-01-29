@@ -18,6 +18,7 @@ function Data.new(Player)
         CollectPassToken = 100,
 		HyderKillBlock = 100,
 		QuestAll = 100,
+		
 
 
         ProductDonat = {

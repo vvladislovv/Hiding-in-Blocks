@@ -12,16 +12,6 @@
       "$ignoreUnknownInstances": true,
       "$path": "src/ServerScriptService"
     },
-    "ServerStorage": {
-      "$className": "ServerStorage",
-      "$ignoreUnknownInstances": true,
-      "$path": "src/ServerStorage"
-    },
-    "StarterGui": {
-      "$className": "StarterGui",
-      "$ignoreUnknownInstances": true,
-      "$path": "src/StarterGui"
-    },
     "StarterPlayer": {
       "$className": "StarterPlayer",
       "StarterCharacterScripts": {
@@ -35,6 +25,11 @@
         "$path": "src/StarterPlayer/StarterPlayerScripts"
       },
       "$ignoreUnknownInstances": true
+    },
+    "Workspace": {
+      "$className": "Workspace",
+      "$ignoreUnknownInstances": true,
+      "$path": "src/Workspace"
     }
   }
 }
