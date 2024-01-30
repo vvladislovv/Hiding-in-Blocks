@@ -11,14 +11,6 @@ local UI = PlayerGui:WaitForChild('UI')
 local GuiLeaderboard = UI.GuiLeaderboard
 
 repeat _G.PData = Remote.GetDataSave:InvokeServer() task.wait(0.1) until _G.PData
-
-local NamePlatformTable = {
-    ['KillBoard'] = {},
-    ['SnelikBoard'] = {},
-    ['QuestBoard'] = {},
-    ['TokenBoard'] = {}
-}
-
 local GuiOpen = false
 
 for _, Index in next, Leaderbord:GetChildren() do

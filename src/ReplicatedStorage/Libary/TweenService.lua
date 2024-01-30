@@ -15,6 +15,10 @@ function Tween:CreateCamera(Camera1,Camera2, Time)
     task.wait(3)
 end
 
+function Tween:PrinalSettings(GuiName,Timer,Position)
+    TweenService:Create(GuiName,TweenInfo.new(Timer, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut), Position):Play()
+end
+
 function Tween:GuiFrameShop(GuiName, Timer, Position)
     TweenService:Create(GuiName,TweenInfo.new(Timer, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut), Position):Play()
 end
