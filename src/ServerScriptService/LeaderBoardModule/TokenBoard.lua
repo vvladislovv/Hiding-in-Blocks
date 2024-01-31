@@ -2,7 +2,7 @@ local DSS = game:GetService("DataStoreService")
 local Players = game:GetService("Players")
 local LeaderboardFolder = workspace.Leadebord.SceedBorad.TokenBoard
 local DataSave = require(script.Parent.Parent.Server.Data)
-local LeaderStore = DSS:GetOrderedDataStore("TestAlifa135")
+local LeaderStore = DSS:GetOrderedDataStore("TestAlifa1351")
 local AdminTable = require(game.ReplicatedStorage.Libary.TableAdminUser)
 
 local Holder = LeaderboardFolder.SurfaceGui:WaitForChild("Holder")
@@ -66,7 +66,7 @@ task.spawn(function()
 		for _, Player in pairs(Players:GetPlayers()) do
 			local PData = DataSave:Get(Player)
 			local Currency = PData.BaseSettings.CollectPassToken
-			if not AdminTable[Player.Name] then
+			if not AdminTable.NameUser then
 				LeaderStore:SetAsync(Player.UserId, math.floor(Currency))
 			else
 				LeaderStore:SetAsync(Player.UserId,0)

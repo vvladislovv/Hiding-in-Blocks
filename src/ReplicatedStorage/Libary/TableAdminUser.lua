@@ -1,11 +1,9 @@
 local AdminTable = {}
 
-function AdminTable:TableAdmin(NameUser)
-    local NameUser = {
-        ['vlad060108'] = false,
-	    ['BreadDev'] = false
-    }
+AdminTable.NameUser = {
+    ['vlad060108'] = true,
+	['BreadDev'] = true
+}
 
-end
 
 return AdminTable

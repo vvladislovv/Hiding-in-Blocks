@@ -1,48 +1,47 @@
 local DroperCoin = {}
+local LocalizationService = game:GetService('LocalizationService')
 
 local RS = game:GetService('ReplicatedStorage')
 local Remote = RS:WaitForChild('Remote')
 local TWS = RS:WaitForChild('Libary')
-local CoinFolder = game.Workspace.RandomToken:GetChildren()
-local Couldown = 5 -- 450
-local maxCoins = 5
-local CoinSpawn = 0
+local CoinFolder = game.Workspace.RandomToken
+local Data = require(script.Parent.Data)
+local CounCollect = false
+local CC = false
+local waitTime = 5
 
-local CollectCoin = 0
+local coinsSpawned = 0
 
-function CountCoins()
-    CoinSpawn = 0
-    for _, Coin in next, CoinFolder do
-        if CoinSpawn == maxCoins then
-            if Coin:FindFirstChild("Coin") then
-                CoinSpawn += 1
-            end 
+for _, index in next, CoinFolder:GetChildren() do
+    if index:IsA('Part') then
+        coinsSpawned = coinsSpawned + 1
+        local maxCoins = 1
+      --  print(coinsSpawned)
+        if maxCoins <= coinsSpawned then
+            local coinClone = RS.CoinClone:Clone()
+			coinClone.Parent = index
+            coinClone.Name = 'coinClone'
+			coinClone.CFrame = index.CFrame + Vector3.new(0,4,0)
+            coinClone.Transparency = 0
+			--print("Invite coin")
         end
-    end
-    return CoinSpawn
+
+		local Debounce = false
+        index.coinClone.Touched:Connect(function(hit)
+			if Debounce then return end
+            local Player = game:GetService('Players'):GetPlayerFromCharacter(hit.Parent)
+            if Player then
+				Debounce = true
+                local PData = Data:Get(Player)
+				PData.BaseSettings.Sneliki += 1
+				print(PData.BaseSettings.Sneliki)
+                RS.Remote.TokenClientAnim:FireClient(Player, index.coinClone)
+                task.wait(waitTime)
+				Debounce = false
+                RS.Remote.TokenClientAnimTwo:FireClient(Player, index.coinClone)      
+            end
+        end)
+    end 
 end
-
-function CoinSpawner()
-    while true do
-        local amount = CountCoins()
-
-        if amount <= maxCoins then
-            local CoinClone = RS.CoinClone:Clone()
-            local RandomSpawn
-
-            repeat
-                RandomSpawn = CoinFolder[math.random(1, #CoinFolder)]
-            until not RandomSpawn:FindFirstChild('Coin')
-            
-            CoinClone.Transparency = 0
-            CoinClone.Parent = RandomSpawn
-            CoinClone.CFrame = RandomSpawn.CFrame + Vector3.new(0,3,0)
-            print("Spawn")
-        end
-        task.wait(Couldown)
-    end
-end
-
-task.spawn(CoinSpawner)
 
 return DroperCoin 
