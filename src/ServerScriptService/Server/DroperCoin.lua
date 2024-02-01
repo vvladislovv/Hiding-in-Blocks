@@ -8,7 +8,7 @@ local CoinFolder = game.Workspace.RandomToken
 local Data = require(script.Parent.Data)
 local CounCollect = false
 local CC = false
-local waitTime = 5
+local waitTime = 150
 
 local coinsSpawned = 0
 

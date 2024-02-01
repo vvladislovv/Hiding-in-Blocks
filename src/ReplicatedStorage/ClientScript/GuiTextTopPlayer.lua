@@ -19,13 +19,13 @@ for _, Index in next, Leaderbord:GetChildren() do
             if Index.Name == 'KillBoard' then
                 TWS:GuiLeaderboard(GuiLeaderboard,{Position = UDim2.new(0.436, 0,0.933, 0)},1)
                 GuiLeaderboard.TextLabel.Text = "You did ".._G.PData.BaseSettings.Sneliki.." Hyder Total"
+                GuiOpen = true
                 task.wait(0.1)
                 GuiOpen = true
             elseif Index.Name == 'SnelikBoard' then
                 TWS:GuiLeaderboard(GuiLeaderboard,{Position = UDim2.new(0.436, 0,0.933, 0)},1)
                 GuiLeaderboard.TextLabel.Text = "You did ".._G.PData.BaseSettings.Sneliki.." Sneliki Total"
                 task.wait(0.1)
-                GuiOpen = true
             elseif Index.Name == 'QuestBoard' then
                 TWS:GuiLeaderboard(GuiLeaderboard,{Position = UDim2.new(0.436, 0,0.933, 0)},1)
                 GuiLeaderboard.TextLabel.Text = "You did ".._G.PData.BaseSettings.QuestAll.." Quset Total"

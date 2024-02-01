@@ -17,25 +17,26 @@ function Data.new(Player)
 		Sneliki = 100,
         CollectPassToken = 100,
 		HyderKillBlock = 100,
-		QuestAll = 100,
+		QuestAll = 100, --// перевезать на TotalQuest
 		
-
-
         ProductDonat = {
             [0000000] = true
         }
 	}
     PData.QuestNPC = {
-        ['Vladislov'] = {NamberQuest = 1},
-        ['Bread'] = {NamberQuest = 1}
+        ['Vladislov'] = {NowQuest = false, Complish = false, NamberQuest = 1, QuestEvent = false, TotalQuest = 0},
+        ['Bread'] = {NowQuest = false, Complish = false, NamberQuest = 1,QuestEvent = false, TotalQuest = 0},
+		['Snail'] = {NowQuest = false,Complish = false, NamberQuest = 1,QuestEvent = false, TotalQuest = 0},
     }
 
 	PData.Equipment = {
 		Boot = ""
 	}
+
 	PData.Bagers = {
 		fasdfasd = true
 	}
+	
 	function PData:Update(key, value)
 		PData[key] = value
 		Remotes.ClientDataUpdate:FireClient(Player,key,value)

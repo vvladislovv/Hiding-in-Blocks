@@ -12,11 +12,11 @@ RunService.RenderStepped:Connect(function()
 end)
 
 RS:WaitForChild('Remote').TokenClientAnim.OnClientEvent:Connect(function(Coint)
-    TW:Create(Coint,TweenInfo.new(0.5, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut), {Transparency = 1}):Play() 
+    TW:Create(Coint,TweenInfo.new(0.2, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut), {Transparency = 1}):Play() 
 end)
 
 RS:WaitForChild('Remote').TokenClientAnimTwo.OnClientEvent:Connect(function(Coint)
-    TW:Create(Coint,TweenInfo.new(0.5, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut), {Transparency = 0}):Play() 
+    TW:Create(Coint,TweenInfo.new(0.2, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut), {Transparency = 0}):Play() 
 end)
 
 
