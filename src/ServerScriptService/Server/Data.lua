@@ -24,9 +24,15 @@ function Data.new(Player)
         }
 	}
     PData.QuestNPC = {
-        ['Vladislov'] = {NowQuest = false, Complish = false, NamberQuest = 1, QuestEvent = false, TotalQuest = 0},
-        ['Bread'] = {NowQuest = false, Complish = false, NamberQuest = 1,QuestEvent = false, TotalQuest = 0},
-		['Snail'] = {NowQuest = false,Complish = false, NamberQuest = 1,QuestEvent = false, TotalQuest = 0},
+        ['Vladislov'] = {
+		NowQuest = false, --// Новый квест
+		Complish = false, --// Настоящий квест
+		NumberQuest = 1, --// Номер квеста
+		QuestEvent = false, --// Праздничный квест
+		TotalQuest = 0 --// Всего
+		},
+        ['Bread'] = {NowQuest = false, Complish = false, NumberQuest = 1,QuestEvent = false, TotalQuest = 0},
+		['Snail'] = {NowQuest = false,Complish = false, NumberQuest = 1,QuestEvent = false, TotalQuest = 0},
     }
 
 	PData.Equipment = {
