@@ -44,7 +44,7 @@ function QuestModule:QuestGlobule(NPC) --// NPC - название персон�
         Index.ProximityPrompt.Triggered:Connect(function()
             if Index.Name == 'Bread' then -- Index.Camera.Part
                 if not _G.PData.QuestNPC[Index.Name].NowQuest then --// Проверка если квест у этого NPC
-                    
+                    --// хуй знает 
                 else
                     
                 end
