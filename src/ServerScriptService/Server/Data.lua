@@ -31,8 +31,8 @@ function Data.new(Player)
 		QuestEvent = false, --// Праздничный квест
 		TotalQuest = 0 --// Всего
 		},
-        ['Bread'] = {NowQuest = false, Complish = false, NumberQuest = 1,QuestEvent = false, TotalQuest = 0},
-		['Snail'] = {NowQuest = false,Complish = false, NumberQuest = 1,QuestEvent = false, TotalQuest = 0},
+        ['Bread'] = {NowQuest = false, Complish = false, NumberQuest = 1,QuestEvent = false, TotalQuest = 0, NoQuset = false},
+		['Snail'] = {NowQuest = false,Complish = false, NumberQuest = 1,QuestEvent = false, TotalQuest = 0, NoQuset = false},
     }
 
 	PData.Equipment = {
@@ -62,8 +62,8 @@ end
 
 local AutoSaves = {}
 
-local MainKey = 'DataMainServerAlifa1'
-local ClientKey = 'DataMainClientAlifa1'
+local MainKey = 'DataMainServerAlifa13'
+local ClientKey = 'DataMainClientAlifa13'
 
 local DataStore2 = require(game.ServerScriptService.DataStore2)
 

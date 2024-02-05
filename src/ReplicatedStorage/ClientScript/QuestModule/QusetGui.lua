@@ -27,7 +27,4 @@ CloseButton.MouseButton1Click:Connect(function()
 end) --// Закрыть квесты
 
 
-
-QusetOpenGui()
-
 return QuestGui
