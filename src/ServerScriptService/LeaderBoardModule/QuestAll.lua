@@ -67,10 +67,10 @@ task.spawn(function()
 		for _, Player in pairs(Players:GetPlayers()) do
 			local PData = DataSave:Get(Player)
 			local Currency = PData.BaseSettings.QuestAll
-			if not AdminTable.NameUser then
-				LeaderStore:SetAsync(Player.UserId, math.floor(Currency))
-			else
+			if AdminTable.NameUser[Player.Name] ~= false then
 				LeaderStore:SetAsync(Player.UserId,0)
+			else
+				LeaderStore:SetAsync(Player.UserId, math.floor(Currency))
 			end
 		end
 		UpdateBoard()

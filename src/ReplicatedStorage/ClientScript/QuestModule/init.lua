@@ -1,11 +1,15 @@
 local Players = game:GetService("Players").LocalPlayer
-local Workspace = game:GetService("Workspace")
 local PlayerGui = Players:WaitForChild('PlayerGui')
 local UI = PlayerGui:WaitForChild("UI")
+local Remote = game.ReplicatedStorage:WaitForChild("Remote")
 local TWS = require(game.ReplicatedStorage:WaitForChild('Libary').TweenService)
 local DialogsModuleFolder = require(game.ReplicatedStorage:WaitForChild('ClientScript').QuestModule.DiaolgsNPC)
 
-_G.PData = game.ReplicatedStorage.Remote.GetDataSave:InvokeServer()
+repeat 
+    _G.PData = game.ReplicatedStorage.Remote.GetDataSave:InvokeServer()
+until _G.PData
+
+print(_G.PData)
 
 
 --// Gui frame Quest
@@ -42,11 +46,13 @@ end
 
 function NPCFind(NPC) --// Проверка на каком этапе квес у игрока 
     local TypeQuest 
-    if not _G.PData.QuestNPC[NPC].Complish then --// Если нет то, нету квеста
+    if not _G.PData.QuestNPC[NPC].NowQuest then --// Если нет то, нету квеста
+        print(_G.PData.QuestNPC[NPC])
         TypeQuest = "NewQuest"
         NewQuestNPC(TypeQuest, NPC)
-    elseif _G.PData.QuestNPC[NPC].Complish and not _G.PData.QuestNPC[NPC].NowQuest then --// Если есть первое, но нет второго значить в процеессе выполнения
+    elseif _G.PData.QuestNPC[NPC].NowQuest == true and not _G.PData.QuestNPC[NPC].Complish then --// Если есть первое, но нет второго значить в процеессе выполнения
         TypeQuest = "OldQuest"
+        print('fff')
         NewQuestNPC(TypeQuest, NPC)
     elseif _G.PData.QuestNPC[NPC].Complish and _G.PData.QuestNPC[NPC].NowQuest then --// Если то и то тогда конец квеста
         TypeQuest = "Completed"
@@ -66,38 +72,77 @@ function ButtonClick(Button)
 end
 
 function NewQuestNPC(TypeQuest, NPC)
-    local DialogsModule = DialogsModuleFolder.QuesetDialog[NPC].QusetTable[_G.PData.QuestNPC[NPC].NumberQuest].Dialogs
+    local DialogsModule = DialogsModuleFolder.QuesetDialog[NPC].QusetTable[_G.PData.QuestNPC[NPC].TotalQuest].Dialogs
     local Index = 1
     if TypeQuest == 'NewQuest' then
         if NPC == "Bread" then
             if not _G.PData.QuestNPC[NPC].NowQuest then
-                print(DialogsModuleFolder.QuesetDialog[NPC].QusetTable[_G.PData.QuestNPC[NPC].NumberQuest])
+                _G.PData.QuestNPC[NPC].NowQuest = true
+                Remote.QuestRemote:FireServer(NPC)
+                
                 OpenGuiQuest(BreadGui)
                 --TextPrint(BreadGui.Frame.TextLabel, 0.1, DialogsModule)
 
-                if BreadGui.Frame.TextLabel.Text == "" and Index == 1 then --// Проверка на первый индекс
-                    TextPrint(BreadGui.Frame.TextLabel, 0.15, DialogsModule.NewQuset[Index])
-                end
-
+                BreadGui.Frame.TextLabel.Text = DialogsModule.NewQuset[Index]
                 BreadGui.ButtonQuest.MouseButton1Click:Connect(function()
                     Index += 1
                     if Index > #DialogsModule.NewQuset then --// Счет по [1]...
                         CloseGuiQuest(BreadGui)
-                        --// передача ивента на север
-                        Index = 1 --// Поменять на OldQuest
+                        Index = 1
                     else
                         ButtonClick(BreadGui)
-                        print(DialogsModule.NewQuset[Index])
-                        TextPrint(BreadGui.Frame.TextLabel, 0.1, DialogsModule.NewQuset[Index])
+                        --print(DialogsModule.NewQuset[Index])
+                        BreadGui.Frame.TextLabel.Text = DialogsModule.NewQuset[Index]
+                        --TextPrint(BreadGui.Frame.TextLabel, 0.1, DialogsModule.NewQuset[Index])
                     end
                 end)
             end
 
         end
     elseif TypeQuest == 'OldQuest' then
-        print('aaa')
+        if NPC == "Bread" then
+            print('OldQuest')
+            print(_G.PData.QuestNPC[NPC].NowQuest)
+            if _G.PData.QuestNPC[NPC].NowQuest then
+                _G.PData.QuestNPC[NPC].NowQuest = true
+                _G.PData.QuestNPC[NPC].Complish = true
+                OpenGuiQuest(BreadGui)
+                BreadGui.Frame.TextLabel.Text = DialogsModule.OldQuset[Index]
+                BreadGui.ButtonQuest.MouseButton1Click:Connect(function()
+                    Index += 1
+                    if Index > #DialogsModule.OldQuset then --// Счет по [1]...
+                        CloseGuiQuest(BreadGui)
+                        Index = 1 
+                    else
+                        ButtonClick(BreadGui)
+                        --print(DialogsModule.OldQuset[Index])
+                        BreadGui.Frame.TextLabel.Text = DialogsModule.OldQuset[Index]
+                        --TextPrint(BreadGui.Frame.TextLabel, 0.1, DialogsModule.OldQuset[Index])
+                    end
+    
+                end)
+            end
+        end
     elseif TypeQuest == 'Completed' then
-        print('fff')
+        if NPC == "Bread" then
+            print('OldQuest')
+            print(_G.PData.QuestNPC[NPC].Complish)
+            Remote.QuestComplish:FireServer(NPC)
+                OpenGuiQuest(BreadGui)
+                BreadGui.Frame.TextLabel.Text = DialogsModule.Completed[Index]
+                BreadGui.ButtonQuest.MouseButton1Click:Connect(function()
+                    Index += 1
+                    if Index > #DialogsModule.Completed then --// Счет по [1]...
+                        CloseGuiQuest(BreadGui)
+                        Index = 1
+                    else
+                        ButtonClick(BreadGui)
+                        BreadGui.Frame.TextLabel.Text = DialogsModule.Completed[Index]
+                        --TextPrint(BreadGui.Frame.TextLabel, 0.1, DialogsModule.Completed[Index])
+                    end
+    
+                end)
+        end
     elseif TypeQuest == 'EventQuest' then
         print('fff')
     elseif TypeQuest == 'NoQuset' then --// нет квестов
@@ -128,17 +173,11 @@ function QuestModule:QuestGlobule() --// NPC - название персонаж
         Index.ProximityPrompt.Triggered:Connect(function()
             local NameNPC = Index.Name
             if Index.Name == 'Bread' then -- Index.Camera.Part
-                if not _G.PData.QuestNPC[NameNPC].NowQuest then --// Проверка если квест у этого NPC
-                    NPCFind(NameNPC)
-                else
-                    
-                end
-
+                NPCFind(NameNPC)
             elseif Index.Name == 'VladislovNPC' then
-                
-
+                NPCFind(NameNPC)
             elseif Index.Name == 'SnailNPC' then
-                
+                NPCFind(NameNPC)
             end
         end)
     end

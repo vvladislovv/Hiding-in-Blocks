@@ -10,7 +10,7 @@ local Remote = game.ReplicatedStorage:WaitForChild('Remote')
 local UI = PlayerGui:WaitForChild('UI')
 local GuiLeaderboard = UI.GuiLeaderboard
 
-repeat _G.PData = Remote.GetDataSave:InvokeServer() task.wait(0.1) until _G.PData
+_G.PData = game.ReplicatedStorage.Remote.GetDataSave:InvokeServer()
 local GuiOpen = false
 
 for _, Index in next, Leaderbord:GetChildren() do

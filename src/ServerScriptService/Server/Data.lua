@@ -1,6 +1,5 @@
 local Data = {}
 
-local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
 local CopyTable = require(game.ReplicatedStorage.Libary.CopyTable)
 
@@ -14,25 +13,22 @@ function Data.new(Player)
 	local PData = {}
 	PData.Loaded = false
 	PData.BaseSettings = { 
-		Sneliki = 100,
-        CollectPassToken = 100,
-		HyderKillBlock = 100,
-		QuestAll = 100, --// перевезать на TotalQuest
+		Sneliki = 0,
+        CollectPassToken = 0,
+		HyderKillBlock = 0,
+		QuestAll = 0, --// перевезать на TotalQuest
 		
-        ProductDonat = {
-            [0000000] = true
-        }
+        
 	}
     PData.QuestNPC = {
         ['Vladislov'] = {
 		NowQuest = false, --// Новый квест
 		Complish = false, --// Настоящий квест
-		NumberQuest = 1, --// Номер квеста
 		QuestEvent = false, --// Праздничный квест
 		TotalQuest = 0 --// Всего
 		},
-        ['Bread'] = {NowQuest = false, Complish = false, NumberQuest = 1,QuestEvent = false, TotalQuest = 0, NoQuset = false},
-		['Snail'] = {NowQuest = false,Complish = false, NumberQuest = 1,QuestEvent = false, TotalQuest = 0, NoQuset = false},
+        ['Bread'] = {NowQuest = false, Complish = false, QuestEvent = false, TotalQuest = 1, NoQuset = false},
+		['Snail'] = {NowQuest = false,Complish = false, QuestEvent = false, TotalQuest = 1, NoQuset = false},
     }
 
 	PData.Equipment = {
@@ -62,8 +58,8 @@ end
 
 local AutoSaves = {}
 
-local MainKey = 'DataMainServerAlifa13'
-local ClientKey = 'DataMainClientAlifa13'
+local MainKey = 'DataMainServerAlifa1364sresw'
+local ClientKey = 'DataMainClientAlifa1364sresw'
 
 local DataStore2 = require(game.ServerScriptService.DataStore2)
 
@@ -73,6 +69,7 @@ function LoadData(Client)
 	local DataStorage = DataStore2(ClientKey, Client):GetTable(PData)
 	PData = GetDataFromDataStorage(Client, DataStorage)
 	PData.Loaded = true
+	print(PData)
 	AutoSaves[Client.Name] = Client
 end
 
@@ -116,8 +113,8 @@ do
 end
 
 local TotalDelta = 0
-spawn(function()
-	while wait(1) do
+task.spawn(function()
+	while task.wait(1) do
 		TotalDelta += 1
 		if TotalDelta > 3 then
 			TotalDelta = 0

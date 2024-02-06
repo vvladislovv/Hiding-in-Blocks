@@ -50,11 +50,14 @@ Dualogs.QuesetDialog = {
                     },
 
                     OldQuset = { -- // Старый квест и квест не выполнился 
-                        ""
+                        "OldQuest",
+                        "Bye"
                     },
 
                     Completed = { -- // квесть выполнили
-                        ""
+                        "Yes",
+                        "OneQuset",
+                        "Good lick"
                     }
 
                 },
