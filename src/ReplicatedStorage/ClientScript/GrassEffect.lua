@@ -30,8 +30,8 @@ for _, TreeAnim in next, GrassMap:GetChildren() do
     task.spawn(function()
         while true do
             task.wait()
-            local x = Pos.x + (math.sin(taller + (Pos.x/5)) * math.sin(taller/9))/3
-            local z = Pos.z + (math.sin(taller + (Pos.z/6)) * math.sin(taller/12))/4
+            local x = Pos.x + (math.sin(taller + (Pos.x/5)) * math.sin(taller/9))/5
+            local z = Pos.z + (math.sin(taller + (Pos.z/6)) * math.sin(taller/12))/5
             TreeAnim.CFrame = CFrame.new(x, Pos.y, z) * CFrame.Angles((z-Pos.z)/tall, 0,(x-Pos.x)/-tall)
             task.wait()
             taller = taller + 0.15

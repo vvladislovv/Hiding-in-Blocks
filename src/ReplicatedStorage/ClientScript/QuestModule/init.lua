@@ -5,7 +5,7 @@ local Remote = game.ReplicatedStorage:WaitForChild("Remote")
 local TWS = require(game.ReplicatedStorage:WaitForChild('Libary').TweenService)
 local DialogsModuleFolder = require(game.ReplicatedStorage:WaitForChild('ClientScript').QuestModule.DiaolgsNPC)
 local NofficalModule = require(game.ReplicatedStorage.ClientScript.Notifical)
-local GuiQuset = require(script.QusetGui)
+--local GuiQuset = require(script.QusetGui)
 
 repeat 
     _G.PData = game.ReplicatedStorage.Remote.GetDataSave:InvokeServer()

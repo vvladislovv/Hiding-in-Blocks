@@ -15,7 +15,7 @@ function Noffical:NewQuest(NPC)
 end
 
 function Noffical:ComplishQuset(NPC, TaskQuset)
-    local function QuestTask(TaskQuset) -- // Надо запустить
+    local function QuestTask(TaskQuset) -- ? запросить функцию
         local Clone = UI.FrameQuest:Clone()
         print(TaskQuset)
         for _, Task in pairs(TaskQuset) do

@@ -1,6 +1,7 @@
 local Mouse = {}
 local UserInputService = game:GetService("UserInputService")
 local Camera = game.Workspace.CurrentCamera
+
 local OffMouse = false
 
 UserInputService.InputBegan:Connect(function(input)

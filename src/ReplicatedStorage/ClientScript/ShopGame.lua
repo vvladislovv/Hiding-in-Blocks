@@ -45,10 +45,6 @@ PP.Triggered:Connect(function()
     OpenShop = true
     Lighting.BlurScreen.Enabled = true
 
-    if UserInputService.MouseBehavior == Enum.MouseBehavior.LockCenter then
-        UserInputService.MouseBehavior = Enum.MouseBehavior.Default
-        UserInputService.MouseIconEnabled = true 
-    end
 
     TWS:GuiFrameShop(ShopGui, 1, {Position = UDim2.new(0.106, 0,0.095, 0)})
     local CameraNow = 1

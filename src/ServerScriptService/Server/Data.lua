@@ -31,6 +31,10 @@ function Data.new(Player)
 		['Snail'] = {NowQuest = false,Complish = false, QuestEvent = false, TotalQuest = 1, NoQuset = false},
     }
 
+	PData.Inventory = {
+		
+	}
+
 	PData.Equipment = {
 		Boot = ""
 	}
