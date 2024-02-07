@@ -4,6 +4,8 @@ local UI = PlayerGui:WaitForChild("UI")
 local Remote = game.ReplicatedStorage:WaitForChild("Remote")
 local TWS = require(game.ReplicatedStorage:WaitForChild('Libary').TweenService)
 local DialogsModuleFolder = require(game.ReplicatedStorage:WaitForChild('ClientScript').QuestModule.DiaolgsNPC)
+local NofficalModule = require(game.ReplicatedStorage.ClientScript.Notifical)
+local GuiQuset = require(script.QusetGui)
 
 repeat 
     _G.PData = game.ReplicatedStorage.Remote.GetDataSave:InvokeServer()
@@ -79,7 +81,6 @@ function NewQuestNPC(TypeQuest, NPC)
             if not _G.PData.QuestNPC[NPC].NowQuest then
                 _G.PData.QuestNPC[NPC].NowQuest = true
                 Remote.QuestRemote:FireServer(NPC)
-                
                 OpenGuiQuest(BreadGui)
                 --TextPrint(BreadGui.Frame.TextLabel, 0.1, DialogsModule)
 
@@ -87,8 +88,11 @@ function NewQuestNPC(TypeQuest, NPC)
                 BreadGui.ButtonQuest.MouseButton1Click:Connect(function()
                     Index += 1
                     if Index > #DialogsModule.NewQuset then --// Счет по [1]...
+                        GuiQuset:NewQuestGUI(DialogsModuleFolder.QuesetDialog[NPC].QusetTable[_G.PData.QuestNPC[NPC].TotalQuest])
                         CloseGuiQuest(BreadGui)
                         Index = 1
+                        task.wait(0.3)
+                        NofficalModule:NewQuest(NPC)
                     else
                         ButtonClick(BreadGui)
                         --print(DialogsModule.NewQuset[Index])
@@ -96,6 +100,7 @@ function NewQuestNPC(TypeQuest, NPC)
                         --TextPrint(BreadGui.Frame.TextLabel, 0.1, DialogsModule.NewQuset[Index])
                     end
                 end)
+                
             end
 
         end
@@ -144,19 +149,24 @@ function NewQuestNPC(TypeQuest, NPC)
                 end)
         end
     elseif TypeQuest == 'EventQuest' then
-        print('fff')
+        if NPC == '' then
+            print('Event')
+        end
     elseif TypeQuest == 'NoQuset' then --// нет квестов
-        print('NoQuset')
+        if NPC == '' then
+            print('NoQuset')
+        end
     end
 end
 
+--[[
 function TextPrint(ObjectGui, TimeWrite, DialogsModule)
-            for i = 1, #DialogsModule, 1 do
-                ObjectGui.Text = string.sub(DialogsModule, 1, i)
-            task.wait(TimeWrite) 
-        end
+        for i = 1, #DialogsModule, 1 do
+            ObjectGui.Text = string.sub(DialogsModule, 1, i)
+        task.wait(TimeWrite) 
+    end
 end
-
+]]
 
 
 function QuestModule:QuestGlobule() --// NPC - название персонажа
@@ -184,14 +194,5 @@ function QuestModule:QuestGlobule() --// NPC - название персонаж
 end
 
 QuestModule:QuestGlobule()
---BreadvGui.ButtonQuest.MouseButton1Click:Connect()
---SnailGui.ButtonQuest.MouseButton1Click:Connect()
---VladislovGui.ButtonQuest.MouseButton1Click:Connect()
 
-
---[[
-    local QuestSnail = UI.QuestSnail
-    local QuestVladislov = UI.QuestVladislov
-    local QuestBread = UI.QuestBread
-    ]]
 return QuestModule

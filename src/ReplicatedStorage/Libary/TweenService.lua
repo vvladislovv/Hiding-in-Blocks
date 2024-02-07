@@ -15,7 +15,7 @@ function Tween:CreateCamera(Camera1,Camera2, Time)
     task.wait(3)
 end
 
-function Tween:PrinalSettings(GuiName,Timer,Position)
+function Tween:MenuTokenPosition(GuiName,Timer,Position)
     TweenService:Create(GuiName,TweenInfo.new(Timer, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut), Position):Play()
 end
 
@@ -27,12 +27,21 @@ function Tween:GuiLeaderboard(GuiName, Position, Timer)
     TweenService:Create(GuiName,TweenInfo.new(Timer, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut), Position):Play()
 end
 
+function Tween:NofficallOpen(NoficallFrame)
+    NoficallFrame:TweenPosition(UDim2.new(0.719, 0,0.76, 0), "InOut", "Linear",1.3)
+end
+
+function Tween:NofficallClose(NoficallFrame)
+    TweenService:Create(NoficallFrame,TweenInfo.new(1.3, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut), {ImageTransparency = 1}):Play()
+    NoficallFrame:TweenPosition(UDim2.new(0.792, 0,2, 0), "InOut", "Linear", 1.3)
+end
+
 function Tween:BittonClick(NPCMenu)--// Делает как будто нажатие
-        NPCMenu:TweenPosition(UDim2.new(0.337, 0,0.75, 0), "Out", "Back", 0.075, true)
-		NPCMenu:TweenSize(UDim2.new(0.363, 0,0.247, 0), "Out", "Back", 0.3, true)
-		task.wait(0.1)
-		NPCMenu:TweenSize(UDim2.new(0.35, 0,0.252, 0), "Out", "Back", 0.3, true)
-		NPCMenu:TweenPosition(UDim2.new(0.337, 0,0.75, 0), "Out", "Back", 0.075, true)
+    NPCMenu:TweenPosition(UDim2.new(0.337, 0,0.75, 0), "Out", "Back", 0.075, true)
+    NPCMenu:TweenSize(UDim2.new(0.363, 0,0.247, 0), "Out", "Back", 0.3, true)
+    task.wait(0.1)
+    NPCMenu:TweenSize(UDim2.new(0.35, 0,0.252, 0), "Out", "Back", 0.3, true)
+    NPCMenu:TweenPosition(UDim2.new(0.337, 0,0.75, 0), "Out", "Back", 0.075, true)
 end
 
 return Tween
