@@ -5,7 +5,7 @@ local Remote = game.ReplicatedStorage:WaitForChild("Remote")
 local TWS = require(game.ReplicatedStorage:WaitForChild('Libary').TweenService)
 local DialogsModuleFolder = require(game.ReplicatedStorage:WaitForChild('ClientScript').QuestModule.DiaolgsNPC)
 local NofficalModule = require(game.ReplicatedStorage.ClientScript.Notifical)
---local GuiQuset = require(script.QusetGui)
+local GuiQuset = require(script.Parent.OpenGui)
 
 repeat 
     _G.PData = game.ReplicatedStorage.Remote.GetDataSave:InvokeServer()
@@ -21,7 +21,7 @@ local SnailGui = UI:WaitForChild('QuestSnail')
 
 local QuestModule = {}
 
-function CheckMouse() --// Иконка мышки включить
+function CheckMouse() --* Иконка мышки включить
     local UIS = game:GetService("UserInputService")
     if UIS.MouseBehavior == Enum.MouseBehavior.LockCenter then
         UIS.MouseBehavior = Enum.MouseBehavior.Default
@@ -29,7 +29,7 @@ function CheckMouse() --// Иконка мышки включить
     end
 end
 
-function CameraType(cf,CameraTypee) --// Получение камеры у персонажа
+function CameraType(cf,CameraTypee) --* Получение камеры у персонажа
     local TW = game:GetService("TweenService")
     local Camera = game.Workspace.CurrentCamera
 
@@ -38,25 +38,25 @@ function CameraType(cf,CameraTypee) --// Получение камеры у пе
 end
 
 function OpenGuiQuest(GuiName)
-    TWS:GuiFrameShop(GuiName, 0.5,{Position = UDim2.new(0.337, 0,0.791, 0)}) --// Открытие
+    TWS:GuiFrameShop(GuiName, 0.5,{Position = UDim2.new(0.337, 0,0.791, 0)}) --* Открытие
 end
 
 function CloseGuiQuest(GuiName)
-    TWS:GuiFrameShop(GuiName, 1.5,{Position = UDim2.new(0.337, 0,5, 0)}) --// Закрытие
+    TWS:GuiFrameShop(GuiName, 1.5,{Position = UDim2.new(0.337, 0,5, 0)}) --* Закрытие
 end
 
 
-function NPCFind(NPC) --// Проверка на каком этапе квес у игрока 
+function NPCFind(NPC) --* Проверка на каком этапе квес у игрока 
     local TypeQuest 
-    if not _G.PData.QuestNPC[NPC].NowQuest then --// Если нет то, нету квеста
+    if not _G.PData.QuestNPC[NPC].NowQuest then --* Если нет то, нету квеста
         print(_G.PData.QuestNPC[NPC])
         TypeQuest = "NewQuest"
         NewQuestNPC(TypeQuest, NPC)
-    elseif _G.PData.QuestNPC[NPC].NowQuest == true and not _G.PData.QuestNPC[NPC].Complish then --// Если есть первое, но нет второго значить в процеессе выполнения
+    elseif _G.PData.QuestNPC[NPC].NowQuest == true and not _G.PData.QuestNPC[NPC].Complish then --* Если есть первое, но нет второго значить в процеессе выполнения
         TypeQuest = "OldQuest"
         print('fff')
         NewQuestNPC(TypeQuest, NPC)
-    elseif _G.PData.QuestNPC[NPC].Complish and _G.PData.QuestNPC[NPC].NowQuest then --// Если то и то тогда конец квеста
+    elseif _G.PData.QuestNPC[NPC].Complish and _G.PData.QuestNPC[NPC].NowQuest then --* Если то и то тогда конец квеста
         TypeQuest = "Completed"
         NewQuestNPC(TypeQuest, NPC)
     elseif _G.PData.QuestNPC[NPC].QuestEvent then
@@ -69,14 +69,32 @@ function NPCFind(NPC) --// Проверка на каком этапе квес 
     return TypeQuest
 end
 
+function TaskQuset(NPC)
+    local QusetInfoModule = DialogsModuleFolder.QuesetDialog[NPC].QusetTable[_G.PData.QuestNPC[NPC].TotalQuest]
+
+    for i, v in pairs(QusetInfoModule.Task) do
+        if i > 1 then -- ! Gui Need scriptTask
+            print(i) -- number
+            print(v) -- Task
+        end
+    end
+end
+
+
 function ButtonClick(Button)
     TWS:BittonClick(Button)
 end
 
 function NewQuestNPC(TypeQuest, NPC)
-    local DialogsModule = DialogsModuleFolder.QuesetDialog[NPC].QusetTable[_G.PData.QuestNPC[NPC].TotalQuest].Dialogs
     local Index = 1
-    if TypeQuest == 'NewQuest' then
+    
+    if not DialogsModuleFolder.QuesetDialog[NPC].QusetTable[_G.PData.QuestNPC[NPC].TotalQuest] then
+        print("Not Quset")
+        TaskQuset(NPC)
+    else
+        local DialogsModule = DialogsModuleFolder.QuesetDialog[NPC].QusetTable[_G.PData.QuestNPC[NPC].TotalQuest].Dialogs
+        TaskQuset(NPC)
+        if TypeQuest == 'NewQuest' then
         if NPC == "Bread" then
             if not _G.PData.QuestNPC[NPC].NowQuest then
                 _G.PData.QuestNPC[NPC].NowQuest = true
@@ -155,10 +173,10 @@ function NewQuestNPC(TypeQuest, NPC)
     elseif TypeQuest == 'NoQuset' then --// нет квестов
         if NPC == '' then
             print('NoQuset')
+            end
         end
     end
 end
-
 --[[
 function TextPrint(ObjectGui, TimeWrite, DialogsModule)
         for i = 1, #DialogsModule, 1 do

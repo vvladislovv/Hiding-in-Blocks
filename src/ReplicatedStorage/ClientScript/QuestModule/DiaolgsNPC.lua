@@ -63,11 +63,41 @@ Dualogs.QuesetDialog = {
                 },
 
                 Task = { -- // Задание 
-                    ""
+                    {
+                        Type = "CollectCoin", -- ! Collect snalik
+                        StartAmt = "0",
+                        NeedAmt = "100",
+                    },
+
+                    {
+                        Type = "KillHilder", --! Kill Hilder
+                        StartAmt = "0",
+                        NeedAmt = "10",
+                    },
+                    {
+                        Type = "KillSeeker", -- ! Kill Seeker
+                        StartAmt = "0",
+                        NeedAmt = "10",
+                    },
+                    {
+                        Type = "CollectTokenMap", -- ! Collect token at map
+                        StartAmt = "0",
+                        NeedAmt = "100",
+                    },
+
+                    {
+                        Type = "Time Game", --! Timer
+                        StartAmt = "0 min",
+                        NeedAmt = "1 hour",
+                    },
                 },
 
                 Rewards = { --// Награда за квесты 
-                    ""
+                    {
+                        Rewar = "BaseSettings",
+                        Type = "Sneliki",
+                        Amount = 1000
+                    }
                 }
             }
         }

@@ -62,8 +62,8 @@ end
 
 local AutoSaves = {}
 
-local MainKey = 'DataMainServerAlifa1364sreswer'
-local ClientKey = 'DataMainClientAlifa1364sreswer'
+local MainKey = 'DataMainServerAlifa1364sreswer3'
+local ClientKey = 'DataMainClientAlifa1364sreswer3'
 
 local DataStore2 = require(game.ServerScriptService.DataStore2)
 
