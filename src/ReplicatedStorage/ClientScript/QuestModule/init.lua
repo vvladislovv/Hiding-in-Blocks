@@ -6,6 +6,7 @@ local TWS = require(game.ReplicatedStorage:WaitForChild('Libary').TweenService)
 local DialogsModuleFolder = require(game.ReplicatedStorage:WaitForChild('ClientScript').QuestModule.DiaolgsNPC)
 local NofficalModule = require(game.ReplicatedStorage.ClientScript.Notifical)
 local GuiQuset = require(script.Parent.OpenGui)
+local FrameQuset = game:GetService('ReplicatedStorage').QusetFrame.FrameQuset  -- QusetFrame in Gui Task
 
 repeat 
     _G.PData = game.ReplicatedStorage.Remote.GetDataSave:InvokeServer()
@@ -13,13 +14,24 @@ until _G.PData
 
 print(_G.PData)
 
-
 --// Gui frame Quest
+
+local QuestFrame = UI:WaitForChild('QuestFrame')
+
+--[[
 local VladislovGui = UI:WaitForChild('QuestVladislov')
 local BreadGui = UI:WaitForChild('QuestBread')
 local SnailGui = UI:WaitForChild('QuestSnail')
-
+]]
 local QuestModule = {}
+
+QuestModule.ColorQuset = { -- ! Подумать насчет разных тем 
+    ColorQusetFrame = {
+        ['Bread'] = {Color3.fromRGB(000)},
+        ['Snail'] = {Color3.fromRGB(000)},
+        ['Vladislov'] = {Color3.fromRGB(000)},
+    }
+}
 
 function CheckMouse() --* Иконка мышки включить
     local UIS = game:GetService("UserInputService")
@@ -74,8 +86,20 @@ function TaskQuset(NPC)
 
     for i, v in pairs(QusetInfoModule.Task) do
         if i > 1 then -- ! Gui Need scriptTask
-            print(i) -- number
-            print(v) -- Task
+            --!  print(i) -- number
+            --! print(v) -- Task
+        end
+
+        if v.Type == "CollectCoin" then
+            print("CollectCoin")
+        elseif v.Type == "KillHilder" then
+            print("KillHilder")
+        elseif v.Type == "KillSeeker" then
+            print("KillSeeker")
+        elseif v.Type == "CollectTokenMap" then
+            print("CollectTokenMap")
+        elseif v.Type == "TimeGame" then
+            print("TimeGame")
         end
     end
 end
@@ -98,8 +122,10 @@ function NewQuestNPC(TypeQuest, NPC)
         if NPC == "Bread" then
             if not _G.PData.QuestNPC[NPC].NowQuest then
                 _G.PData.QuestNPC[NPC].NowQuest = true
-                Remote.QuestRemote:FireServer(NPC)
-                OpenGuiQuest(BreadGui)
+                Remote.QuestRemote:FireServer(NPC) -- ! PData update
+
+                
+                OpenGuiQuest(BreadGui) -- OpenMenu
                 --TextPrint(BreadGui.Frame.TextLabel, 0.1, DialogsModule)
 
                 BreadGui.Frame.TextLabel.Text = DialogsModule.NewQuset[Index]

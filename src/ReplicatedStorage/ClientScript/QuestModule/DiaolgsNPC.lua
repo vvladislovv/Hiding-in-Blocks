@@ -86,7 +86,7 @@ Dualogs.QuesetDialog = {
                     },
 
                     {
-                        Type = "Time Game", --! Timer
+                        Type = "TimeGame", --! Timer
                         StartAmt = "0 min",
                         NeedAmt = "1 hour",
                     },
