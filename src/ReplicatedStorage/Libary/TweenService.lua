@@ -37,11 +37,11 @@ function Tween:NofficallClose(NoficallFrame)
 end
 
 function Tween:BittonClick(NPCMenu)--// Делает как будто нажатие
-    NPCMenu:TweenPosition(UDim2.new(0.337, 0,0.75, 0), "Out", "Back", 0.075, true)
-    NPCMenu:TweenSize(UDim2.new(0.363, 0,0.247, 0), "Out", "Back", 0.3, true)
+    NPCMenu:TweenPosition(UDim2.new(0.49, 0,0.655, 0), "Out", "Back", 0.075, true)
+    NPCMenu:TweenSize(UDim2.new(0, 761,0, 446), "Out", "Back", 0.3, true)
     task.wait(0.1)
-    NPCMenu:TweenSize(UDim2.new(0.35, 0,0.252, 0), "Out", "Back", 0.3, true)
-    NPCMenu:TweenPosition(UDim2.new(0.337, 0,0.75, 0), "Out", "Back", 0.075, true)
+    NPCMenu:TweenSize(UDim2.new(0, 741,0, 426), "Out", "Back", 0.3, true)
+    NPCMenu:TweenPosition(UDim2.new(0.49, 0,0.655, 0), "Out", "Back", 0.075, true)
 end
 
 return Tween

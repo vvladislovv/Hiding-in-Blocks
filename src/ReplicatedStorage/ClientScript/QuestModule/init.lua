@@ -1,12 +1,15 @@
 local Players = game:GetService("Players").LocalPlayer
 local PlayerGui = Players:WaitForChild('PlayerGui')
 local UI = PlayerGui:WaitForChild("UI")
+local TW = game:GetService('TweenService')
 local Remote = game.ReplicatedStorage:WaitForChild("Remote")
 local TWS = require(game.ReplicatedStorage:WaitForChild('Libary').TweenService)
 local DialogsModuleFolder = require(game.ReplicatedStorage:WaitForChild('ClientScript').QuestModule.DiaolgsNPC)
 local NofficalModule = require(game.ReplicatedStorage.ClientScript.Notifical)
 local GuiQuset = require(script.Parent.OpenGui)
 local FrameQuset = game:GetService('ReplicatedStorage').Assert.QusetFrame.FrameQuset  -- QusetFrame in Gui Task
+
+local Cam  = game.Workspace.CurrentCamera
 
 repeat 
     _G.PData = game.ReplicatedStorage.Remote.GetDataSave:InvokeServer()
@@ -56,11 +59,11 @@ function CameraType(cf,CameraTypee) --* Получение камеры у пе�
 end
 
 function OpenGuiQuest(GuiName)
-    TWS:GuiFrameShop(GuiName, 0.5,{Position = UDim2.new(0.337, 0,0.791, 0)}) --* Открытие
+    TWS:GuiFrameShop(GuiName, 0.5,{Position = UDim2.new(0.49, 0,0.655, 0)}) --* Открытие
 end
 
 function CloseGuiQuest(GuiName)
-    TWS:GuiFrameShop(GuiName, 1.5,{Position = UDim2.new(0.337, 0,5, 0)}) --* Закрытие
+    TWS:GuiFrameShop(GuiName, 1.5,{Position = UDim2.new(0.49, 0,3, 0)}) --* Закрытие
 end
 
 
@@ -116,7 +119,7 @@ end
 
 function NewQuestNPC(TypeQuest, NPC) -- ! Добавить и проверить квесты
     local Index = 1
-    
+    local CameraFolderCam = true 
     if not DialogsModuleFolder.QuesetDialog[NPC].QusetTable[_G.PData.QuestNPC[NPC].TotalQuest] then
         print("Not Quset")
         TaskQuset(NPC)
@@ -124,11 +127,18 @@ function NewQuestNPC(TypeQuest, NPC) -- ! Добавить и проверить
         local DialogsModule = DialogsModuleFolder.QuesetDialog[NPC].QusetTable[_G.PData.QuestNPC[NPC].TotalQuest].Dialogs
         TaskQuset(NPC)
         
-        if TypeQuest == 'NewQuest' then
+        if TypeQuest == 'NewQuest' then -- ! Новый квест
         if NPC == "Bread" then
             if not _G.PData.QuestNPC[NPC].NowQuest then
                 _G.PData.QuestNPC[NPC].NowQuest = true
                 Remote.QuestRemote:FireServer(NPC) -- ! PData update
+                local function ColorUp() --! не работет
+                    QuestModule.ColorQuset.ColorQusetFrame['Bread'].Up = QuestFrame.QuestIcon.QuestIcon.BackgroundColor3
+                    QuestModule.ColorQuset.ColorQusetFrame['Bread'].Up = QuestFrame.QuestNumber.QuestNumber2.BackgroundColor3 
+                    QuestModule.ColorQuset.ColorQusetFrame['Bread'].Up = QuestFrame.QusetFrameDiologs.QusetFrameText.BackgroundColor3
+                    QuestModule.ColorQuset.ColorQusetFrame['Bread'].Up = QuestFrame.QusetTextNameNPC.QusetTextNameNPC.BackgroundColor3
+                end
+
                 local function ColorDown()
                     QuestModule.ColorQuset.ColorQusetFrame['Bread'].Down = QuestFrame.QuestIcon.BackgroundColor3
                     QuestModule.ColorQuset.ColorQusetFrame['Bread'].Down = QuestFrame.QuestNumber.BackgroundColor3 
@@ -138,22 +148,33 @@ function NewQuestNPC(TypeQuest, NPC) -- ! Добавить и проверить
 
                 
                 ColorDown()
+                ColorUp()
                 OpenGuiQuest(QuestFrame) -- OpenMenu
                 --TextPrint(BreadGui.Frame.TextLabel, 0.1, DialogsModule)
-
-               QuestFrame.QusetFrameDiologs.QusetFrameText.TextFrame.Text = DialogsModule.NewQuset[Index]
-                QuestFrame.ButtonQuest.MouseButton1Click:Connect(function()
+                Cam.CameraType = Enum.CameraType.Scriptable
+                if CameraFolderCam then -- ! Check ERROR
+                    Cam.CFrame = workspace.QusetNPC.Bread.Camera.Part.CFrame
+                elseif not CameraFolderCam then
+                    Cam.CameraType = Enum.CameraType.Custom
+                    CameraFolderCam = true
+                end
+                --TW:Create()
+               -- TweenNow = TW:Create(Cam,TweenInfo.new(18, Enum.EasingStyle.Linear,Enum.EasingDirection.InOut),{CFrame = CameraFoder['Cam'..CameraNow].CFrame})
+                QuestFrame.QusetFrameDiologs.QusetFrameText.TextFrame.Text = DialogsModule.NewQuset[Index]
+                QuestFrame.QusetFrameDiologs.ButtonMouse.MouseButton1Click:Connect(function()
                     Index += 1
                     if Index > #DialogsModule.NewQuset then --// Счет по [1]...
                         GuiQuset:NewQuestGUI(DialogsModuleFolder.QuesetDialog[NPC].QusetTable[_G.PData.QuestNPC[NPC].TotalQuest])
                         CloseGuiQuest(QuestFrame)
                         Index = 1
+                        CameraFolderCam = false
+                        Cam.CameraType = Enum.CameraType.Custom
                         task.wait(0.3)
                         NofficalModule:NewQuest(NPC)
                     else
                         ButtonClick(QuestFrame)
                         --print(DialogsModule.NewQuset[Index])
-                        QuestFrame.Frame.TextLabel.Text = DialogsModule.NewQuset[Index]
+                        QuestFrame.QusetFrameDiologs.QusetFrameText.TextFrame.Text = DialogsModule.NewQuset[Index]
                         --TextPrint(BreadGui.Frame.TextLabel, 0.1, DialogsModule.NewQuset[Index])
                     end
                 end)
