@@ -8,6 +8,30 @@ local DialogsModuleFolder = require(game.ReplicatedStorage:WaitForChild('ClientS
 local NofficalModule = require(game.ReplicatedStorage.ClientScript.Notifical)
 local GuiQuset = require(script.Parent.OpenGui)
 local FrameQuset = game:GetService('ReplicatedStorage').Assert.QusetFrame.FrameQuset  -- QusetFrame in Gui Task
+local TiggerStop = false
+local TiggerStop2 = false
+local QusetRewards = true
+
+
+
+local QusetTable =  {
+    TableIndex = {
+        ["DiologOne"] = 1,
+        ["DiologPlayer"] = 0,
+        ["DiologTwo"] = 0
+    },
+    TableIndex2 = {
+        ["DiologOne"] = 1,
+        ["DiologPlayer"] = 0,
+        ["DiologTwo"] = 0
+    },
+    TableIndex3 = {
+        ["DiologOne"] = 1,
+        ["DiologPlayer"] = 0,
+        ["DiologTwo"] = 0
+    },
+}
+
 
 local Cam  = game.Workspace.CurrentCamera
 
@@ -31,17 +55,19 @@ local QuestModule = {}
 QuestModule.ColorQuset = { -- ! Подумать насчет разных тем 
     ColorQusetFrame = {
         ["Bread"] = {
-            ["Down"] = Color3.fromRGB(143, 84, 36),
-            ["Up"] = Color3.fromRGB(110, 65, 28)
+            [1] = Color3.fromRGB(143, 84, 36),
+            [2] = Color3.fromRGB(110, 65, 28)
         },
 
         ['Snail'] = {Color3.fromRGB(000)},
-        ['Vladislov'] = {Color3.fromRGB(000)}
+        ['Vladislov'] = {Color3.fromRGB(000)},
+        ["PlayerGame"] =  {
+            [1] = Color3.fromRGB(81, 185, 25),
+            [2] = Color3.fromRGB(59, 136, 18)
+        }
     }
 }
-print(QuestModule.ColorQuset.ColorQusetFrame['Bread'])
-print(QuestModule.ColorQuset.ColorQusetFrame)
-print(QuestModule.ColorQuset)
+
 function CheckMouse() --* Иконка мышки включить
     local UIS = game:GetService("UserInputService")
     if UIS.MouseBehavior == Enum.MouseBehavior.LockCenter then
@@ -75,7 +101,6 @@ function NPCFind(NPC) --* Проверка на каком этапе квес �
         NewQuestNPC(TypeQuest, NPC)
     elseif _G.PData.QuestNPC[NPC].NowQuest == true and not _G.PData.QuestNPC[NPC].Complish then --* Если есть первое, но нет второго значить в процеессе выполнения
         TypeQuest = "OldQuest"
-        print('fff')
         NewQuestNPC(TypeQuest, NPC)
     elseif _G.PData.QuestNPC[NPC].Complish and _G.PData.QuestNPC[NPC].NowQuest then --* Если то и то тогда конец квеста
         TypeQuest = "Completed"
@@ -100,17 +125,28 @@ function TaskQuset(NPC)
         end
 
         if v.Type == "CollectCoin" then
-            print("CollectCoin")
+            --print("CollectCoin")
         elseif v.Type == "KillHilder" then
-            print("KillHilder")
+           -- print("KillHilder")
         elseif v.Type == "KillSeeker" then
-            print("KillSeeker")
+          --  print("KillSeeker")
         elseif v.Type == "CollectTokenMap" then
-            print("CollectTokenMap")
+          --  print("CollectTokenMap")
         elseif v.Type == "TimeGame" then
-            print("TimeGame")
+           -- print("TimeGame")
         end
     end
+end
+
+function TaskCheckRewards(NPC)
+    local QusetInfoTask = DialogsModuleFolder.QuesetDialog[NPC].QusetTable[_G.PData.QuestNPC[NPC].TotalQuest].Task
+    
+    task.spawn(function()
+        while true do
+            task.wait()
+
+        end
+    end)
 end
 
 function ButtonClick(Button)
@@ -118,8 +154,37 @@ function ButtonClick(Button)
 end
 
 function NewQuestNPC(TypeQuest, NPC) -- ! Добавить и проверить квесты
-    local Index = 1
-    local CameraFolderCam = true 
+
+    local function ColorUp()
+        QuestFrame.QuestIcon.QuestIcon2.BackgroundColor3 = QuestModule.ColorQuset.ColorQusetFrame[NPC][1]
+        QuestFrame.QuestNumber.QuestNumber2.BackgroundColor3 = QuestModule.ColorQuset.ColorQusetFrame[NPC][1]
+        QuestFrame.QusetFrameDiologs.QusetFrameText.BackgroundColor3 = QuestModule.ColorQuset.ColorQusetFrame[NPC][1]
+        QuestFrame.QusetTextNameNPC.QusetTextNameNPC2.BackgroundColor3 = QuestModule.ColorQuset.ColorQusetFrame[NPC][1]
+    end
+
+    local function ColorDown()
+        QuestFrame.QuestIcon.BackgroundColor3 = QuestModule.ColorQuset.ColorQusetFrame[NPC][2]
+        QuestFrame.QuestNumber.BackgroundColor3  = QuestModule.ColorQuset.ColorQusetFrame[NPC][2]
+        QuestFrame.QusetFrameDiologs.BackgroundColor3 = QuestModule.ColorQuset.ColorQusetFrame[NPC][2]
+        QuestFrame.QusetTextNameNPC.BackgroundColor3 =  QuestModule.ColorQuset.ColorQusetFrame[NPC][2]
+    end
+
+    local function ColorUpNPC()
+        QuestFrame.QuestIcon.QuestIcon2.BackgroundColor3 = QuestModule.ColorQuset.ColorQusetFrame["PlayerGame"][1]
+        QuestFrame.QuestNumber.QuestNumber2.BackgroundColor3 = QuestModule.ColorQuset.ColorQusetFrame["PlayerGame"][1]
+        QuestFrame.QusetFrameDiologs.QusetFrameText.BackgroundColor3 = QuestModule.ColorQuset.ColorQusetFrame["PlayerGame"][1]
+        QuestFrame.QusetTextNameNPC.QusetTextNameNPC2.BackgroundColor3 = QuestModule.ColorQuset.ColorQusetFrame["PlayerGame"][1]
+    end
+
+    local function ColorDownNPC()
+        QuestFrame.QuestIcon.BackgroundColor3 = QuestModule.ColorQuset.ColorQusetFrame["PlayerGame"][2]
+        QuestFrame.QuestNumber.BackgroundColor3  = QuestModule.ColorQuset.ColorQusetFrame["PlayerGame"][2]
+        QuestFrame.QusetFrameDiologs.BackgroundColor3 = QuestModule.ColorQuset.ColorQusetFrame["PlayerGame"][2]
+        QuestFrame.QusetTextNameNPC.BackgroundColor3 =  QuestModule.ColorQuset.ColorQusetFrame["PlayerGame"][2]
+    end
+
+
+    
     if not DialogsModuleFolder.QuesetDialog[NPC].QusetTable[_G.PData.QuestNPC[NPC].TotalQuest] then
         print("Not Quset")
         TaskQuset(NPC)
@@ -127,116 +192,250 @@ function NewQuestNPC(TypeQuest, NPC) -- ! Добавить и проверить
         local DialogsModule = DialogsModuleFolder.QuesetDialog[NPC].QusetTable[_G.PData.QuestNPC[NPC].TotalQuest].Dialogs
         TaskQuset(NPC)
         
-        if TypeQuest == 'NewQuest' then -- ! Новый квест
+        if TypeQuest == 'NewQuest' and not TiggerStop then -- ! Новый квест
         if NPC == "Bread" then
             if not _G.PData.QuestNPC[NPC].NowQuest then
+                QuestFrame.QuestIcon.QuestIcon2.ImageLabel.Image = DialogsModuleFolder.QuesetDialog[NPC].QusetTable[_G.PData.QuestNPC[NPC].TotalQuest].Icon
+                QuestFrame.QuestNumber.QuestNumber2.TextLabel.Text = _G.PData.QuestNPC[NPC].TotalQuest
                 _G.PData.QuestNPC[NPC].NowQuest = true
                 Remote.QuestRemote:FireServer(NPC) -- ! PData update
-                local function ColorUp() --! не работет
-                    QuestModule.ColorQuset.ColorQusetFrame['Bread'].Up = QuestFrame.QuestIcon.QuestIcon.BackgroundColor3
-                    QuestModule.ColorQuset.ColorQusetFrame['Bread'].Up = QuestFrame.QuestNumber.QuestNumber2.BackgroundColor3 
-                    QuestModule.ColorQuset.ColorQusetFrame['Bread'].Up = QuestFrame.QusetFrameDiologs.QusetFrameText.BackgroundColor3
-                    QuestModule.ColorQuset.ColorQusetFrame['Bread'].Up = QuestFrame.QusetTextNameNPC.QusetTextNameNPC.BackgroundColor3
-                end
-
-                local function ColorDown()
-                    QuestModule.ColorQuset.ColorQusetFrame['Bread'].Down = QuestFrame.QuestIcon.BackgroundColor3
-                    QuestModule.ColorQuset.ColorQusetFrame['Bread'].Down = QuestFrame.QuestNumber.BackgroundColor3 
-                    QuestModule.ColorQuset.ColorQusetFrame['Bread'].Down = QuestFrame.QusetFrameDiologs.BackgroundColor3
-                    QuestModule.ColorQuset.ColorQusetFrame['Bread'].Down = QuestFrame.QusetTextNameNPC.BackgroundColor3
-                end
-
-                
+                QuestFrame.QusetTextNameNPC.QusetTextNameNPC2.TextLabel.Text = NPC
                 ColorDown()
                 ColorUp()
                 OpenGuiQuest(QuestFrame) -- OpenMenu
                 --TextPrint(BreadGui.Frame.TextLabel, 0.1, DialogsModule)
                 Cam.CameraType = Enum.CameraType.Scriptable
-                if CameraFolderCam then -- ! Check ERROR
-                    Cam.CFrame = workspace.QusetNPC.Bread.Camera.Part.CFrame
-                elseif not CameraFolderCam then
-                    Cam.CameraType = Enum.CameraType.Custom
-                    CameraFolderCam = true
-                end
+                TW:Create(Cam,TweenInfo.new(0.5, Enum.EasingStyle.Linear,Enum.EasingDirection.InOut), {CFrame = workspace.QusetNPC.Bread.Camera.Part.CFrame}):Play()
                 --TW:Create()
                -- TweenNow = TW:Create(Cam,TweenInfo.new(18, Enum.EasingStyle.Linear,Enum.EasingDirection.InOut),{CFrame = CameraFoder['Cam'..CameraNow].CFrame})
-                QuestFrame.QusetFrameDiologs.QusetFrameText.TextFrame.Text = DialogsModule.NewQuset[Index]
+                QuestFrame.QusetFrameDiologs.QusetFrameText.TextFrame.Text = DialogsModule.NewQuset.QusetNPCDiologs1[QusetTable.TableIndex.DiologOne]
                 QuestFrame.QusetFrameDiologs.ButtonMouse.MouseButton1Click:Connect(function()
-                    Index += 1
-                    if Index > #DialogsModule.NewQuset then --// Счет по [1]...
-                        GuiQuset:NewQuestGUI(DialogsModuleFolder.QuesetDialog[NPC].QusetTable[_G.PData.QuestNPC[NPC].TotalQuest])
-                        CloseGuiQuest(QuestFrame)
-                        Index = 1
-                        CameraFolderCam = false
-                        Cam.CameraType = Enum.CameraType.Custom
-                        task.wait(0.3)
-                        NofficalModule:NewQuest(NPC)
-                    else
+                    --print(TableIndex.DiologOne)
+                    if QusetTable.TableIndex.DiologOne < #DialogsModule.NewQuset.QusetNPCDiologs1 then
+                        ColorDown()
+                        ColorUp()
+                        QusetTable.TableIndex.DiologOne += 1
                         ButtonClick(QuestFrame)
+                        QuestFrame.QusetFrameDiologs.QusetFrameText.TextFrame.Text = DialogsModule.NewQuset.QusetNPCDiologs1[QusetTable.TableIndex.DiologOne]
                         --print(DialogsModule.NewQuset[Index])
-                        QuestFrame.QusetFrameDiologs.QusetFrameText.TextFrame.Text = DialogsModule.NewQuset[Index]
-                        --TextPrint(BreadGui.Frame.TextLabel, 0.1, DialogsModule.NewQuset[Index])
-                    end
-                end)
-                
-            end
+                        local NumberMax = math.max(#DialogsModule.NewQuset.QusetNPCDiologs1)
+                        if QusetTable.TableIndex.DiologOne > NumberMax then
+                            QusetTable.TableIndex.DiologPlayer = 1
+                            QuestFrame.QusetFrameDiologs.QusetFrameText.TextFrame.Text = DialogsModule.NewQuset.PlayerDiologs[QusetTable.TableIndex.DiologPlayer]
+                        end
+                        -- #DialogsModule.NewQuset.QusetNPCDiologs1 -- ! это максимальное число
+                        
 
-        end
-    elseif TypeQuest == 'OldQuest' then
-        if NPC == "Bread" then
-            print('OldQuest')
-            print(_G.PData.QuestNPC[NPC].NowQuest)
-            if _G.PData.QuestNPC[NPC].NowQuest then
-                _G.PData.QuestNPC[NPC].NowQuest = true
-                _G.PData.QuestNPC[NPC].Complish = true
-                OpenGuiQuest(QuestFrame)
-                QuestFrame.Frame.TextLabel.Text = DialogsModule.OldQuset[Index]
-                QuestFrame.ButtonQuest.MouseButton1Click:Connect(function()
-                    Index += 1
-                    if Index > #DialogsModule.OldQuset then --// Счет по [1]...
-                        CloseGuiQuest(QuestFrame)
-                        Index = 1 
-                    else
+                    elseif QusetTable.TableIndex.DiologPlayer < #DialogsModule.NewQuset.PlayerDiologs then
+                        local content = game.Players:GetUserThumbnailAsync(game.Players.LocalPlayer.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size48x48)
+                        QuestFrame.QuestIcon.QuestIcon2.ImageLabel.Image = content
+                        QusetTable.TableIndex.DiologPlayer += 1
+                        ColorDownNPC()
+                        ColorUpNPC()
                         ButtonClick(QuestFrame)
-                        --print(DialogsModule.OldQuset[Index])
-                        QuestFrame.Frame.TextLabel.Text = DialogsModule.OldQuset[Index]
-                        --TextPrint(BreadGui.Frame.TextLabel, 0.1, DialogsModule.OldQuset[Index])
+                        QuestFrame.QusetFrameDiologs.QusetFrameText.TextFrame.Text = DialogsModule.NewQuset.PlayerDiologs[QusetTable.TableIndex.DiologPlayer]
+                        local NumberMax = math.max(#DialogsModule.NewQuset.PlayerDiologs)
+                        if QusetTable.TableIndex.DiologPlayer > NumberMax then
+                            QusetTable.TableIndex.DiologTwo = 1
+                            QuestFrame.QusetFrameDiologs.QusetFrameText.TextFrame.Text = DialogsModule.NewQuset.QusetNPCDiologs2[QusetTable.TableIndex.DiologTwo]
+                        end
+
+                    elseif QusetTable.TableIndex.DiologTwo < #DialogsModule.NewQuset.QusetNPCDiologs2 then
+                        QuestFrame.QuestIcon.QuestIcon2.ImageLabel.Image = DialogsModuleFolder.QuesetDialog[NPC].QusetTable[_G.PData.QuestNPC[NPC].TotalQuest].Icon
+                        ColorDown()
+                        ColorUp()
+                        QusetTable.TableIndex.DiologTwo += 1
+                        ButtonClick(QuestFrame)
+                        QuestFrame.QusetFrameDiologs.QusetFrameText.TextFrame.Text = DialogsModule.NewQuset.QusetNPCDiologs2[QusetTable.TableIndex.DiologTwo]
+                        local NumberMax = math.max(#DialogsModule.NewQuset.QusetNPCDiologs2)
+                        if QusetTable.TableIndex.DiologTwo >= NumberMax then
+                            CloseGuiQuest(QuestFrame)
+                            Cam.CameraType = Enum.CameraType.Custom
+                            TaskQuset(NPC)
+                            task.wait(0.3)
+
+                          --  TableIndex.DiologOne = 1
+                          --  TableIndex.DiologPlayer = 0
+                          --  TableIndex.DiologTwo = 0
+
+                            TiggerStop = true
+                            NofficalModule:NewQuest(NPC)
+                            GuiQuset:NewQuestGUI(DialogsModuleFolder.QuesetDialog[NPC].QusetTable[_G.PData.QuestNPC[NPC].TotalQuest])
+                            print(TiggerStop)
+                        end
                     end
-    
                 end)
             end
         end
-    elseif TypeQuest == 'Completed' then
-        if NPC == "Bread" then
-            print('OldQuest')
-            print(_G.PData.QuestNPC[NPC].Complish)
-            Remote.QuestComplish:FireServer(NPC)
-                OpenGuiQuest(QuestFrame)
-                QuestFrame.Frame.TextLabel.Text = DialogsModule.Completed[Index]
-                QuestFrame.ButtonQuest.MouseButton1Click:Connect(function()
-                    Index += 1
-                    if Index > #DialogsModule.Completed then --// Счет по [1]...
-                        CloseGuiQuest(QuestFrame)
-                        Index = 1
-                    else
-                        ButtonClick(QuestFrame)
-                        QuestFrame.Frame.TextLabel.Text = DialogsModule.Completed[Index]
-                        --TextPrint(BreadGui.Frame.TextLabel, 0.1, DialogsModule.Completed[Index])
-                    end
     
-                end)
-        end
-    elseif TypeQuest == 'EventQuest' then
-        if NPC == '' then
-            print('Event')
-        end
-    elseif TypeQuest == 'NoQuset' then --// нет квестов
-        if NPC == '' then
-            print('NoQuset')
+        elseif TypeQuest == 'OldQuest' and TiggerStop then
+        print(TypeQuest)
+            if NPC == "Bread" then
+                if _G.PData.QuestNPC[NPC].NowQuest then
+                    QuestFrame.QuestIcon.QuestIcon2.ImageLabel.Image = DialogsModuleFolder.QuesetDialog[NPC].QusetTable[_G.PData.QuestNPC[NPC].TotalQuest].Icon
+                    QuestFrame.QuestNumber.QuestNumber2.TextLabel.Text = _G.PData.QuestNPC[NPC].TotalQuest
+                    --Remote.QuestComplish:FireServer(NPC) -- ! PData update
+                    QuestFrame.QusetTextNameNPC.QusetTextNameNPC2.TextLabel.Text = NPC
+                    ColorDown()
+                    ColorUp()
+                    OpenGuiQuest(QuestFrame) -- OpenMenu
+                    --TextPrint(BreadGui.Frame.TextLabel, 0.1, DialogsModule)
+                    Cam.CameraType = Enum.CameraType.Scriptable
+                    TW:Create(Cam,TweenInfo.new(0.5, Enum.EasingStyle.Linear,Enum.EasingDirection.InOut), {CFrame = workspace.QusetNPC.Bread.Camera.Part.CFrame}):Play()
+                    --TW:Create()
+                -- TweenNow = TW:Create(Cam,TweenInfo.new(18, Enum.EasingStyle.Linear,Enum.EasingDirection.InOut),{CFrame = CameraFoder['Cam'..CameraNow].CFrame})
+                    QuestFrame.QusetFrameDiologs.QusetFrameText.TextFrame.Text = DialogsModule.OldQuset.QusetNPCDiologs1[QusetTable.TableIndex2.DiologOne]
+                    QuestFrame.QusetFrameDiologs.ButtonMouse.MouseButton1Click:Connect(function()
+                    -- print(TypeQuest)
+                        if QusetTable.TableIndex2.DiologOne < #DialogsModule.OldQuset.QusetNPCDiologs1  then
+                        --  print(QuestFrame.QusetFrameDiologs.QusetFrameText.TextFrame.Text)
+                            ColorDown()
+                            ColorUp()
+                            QusetTable.TableIndex2.DiologOne += 1
+                            -- print(TableIndex2)
+                            --print(TableIndex)
+                            ButtonClick(QuestFrame)
+                            print(DialogsModule.OldQuset.QusetNPCDiologs1[QusetTable.TableIndex2.DiologOne])
+                            QuestFrame.QusetFrameDiologs.QusetFrameText.TextFrame.Text = DialogsModule.OldQuset.QusetNPCDiologs1[QusetTable.TableIndex2.DiologOne]
+                            --print(DialogsModule.NewQuset[Index])
+                            local NumberMax = math.max(#DialogsModule.OldQuset.QusetNPCDiologs1)
+                            if QusetTable.TableIndex2.DiologOne > NumberMax then
+                                QusetTable.TableIndex2.DiologPlayer = 1
+                                QuestFrame.QusetFrameDiologs.QusetFrameText.TextFrame.Text = DialogsModule.OldQuset.PlayerDiologs[QusetTable.TableIndex2.DiologPlayer]
+                            end
+                            -- #DialogsModule.NewQuset.QusetNPCDiologs1 -- ! это максимальное число
+                            
+
+                        elseif QusetTable.TableIndex2.DiologPlayer < #DialogsModule.OldQuset.PlayerDiologs then
+                            local content = game.Players:GetUserThumbnailAsync(game.Players.LocalPlayer.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size48x48)
+                            QuestFrame.QuestIcon.QuestIcon2.ImageLabel.Image = content
+                            QusetTable.TableIndex2.DiologPlayer += 1
+                            ColorDownNPC()
+                            ColorUpNPC()
+                            ButtonClick(QuestFrame)
+                            QuestFrame.QusetFrameDiologs.QusetFrameText.TextFrame.Text = DialogsModule.OldQuset.PlayerDiologs[QusetTable.TableIndex2.DiologPlayer]
+                            local NumberMax = math.max(#DialogsModule.OldQuset.PlayerDiologs)
+                            if QusetTable.TableIndex2.DiologPlayer > NumberMax then
+                                QusetTable.TableIndex2.DiologTwo = 1
+                                QuestFrame.QusetFrameDiologs.QusetFrameText.TextFrame.Text = DialogsModule.OldQuset.QusetNPCDiologs2[QusetTable.TableIndex2.DiologTwo]
+                            end
+
+                        elseif QusetTable.TableIndex2.DiologTwo < #DialogsModule.OldQuset.QusetNPCDiologs2 then
+                            QuestFrame.QuestIcon.QuestIcon2.ImageLabel.Image = DialogsModuleFolder.QuesetDialog[NPC].QusetTable[_G.PData.QuestNPC[NPC].TotalQuest].Icon
+                            ColorDown()
+                            ColorUp()
+                            QusetTable.TableIndex2.DiologTwo += 1
+                            ButtonClick(QuestFrame)
+                            QuestFrame.QusetFrameDiologs.QusetFrameText.TextFrame.Text = DialogsModule.OldQuset.QusetNPCDiologs2[QusetTable.TableIndex2.DiologTwo]
+                            local NumberMax = math.max(#DialogsModule.OldQuset.QusetNPCDiologs2)
+                            if QusetTable.TableIndex2.DiologTwo >= NumberMax then
+                                CloseGuiQuest(QuestFrame)
+                                Cam.CameraType = Enum.CameraType.Custom
+                                TaskQuset(NPC)
+                                task.wait(0.3)
+                                
+                                TiggerStop2 = true
+                                _G.PData.QuestNPC[NPC].Complish = true
+                                GuiQuset:NewQuestGUI(DialogsModuleFolder.QuesetDialog[NPC].QusetTable[_G.PData.QuestNPC[NPC].TotalQuest])
+                            end
+                        end
+                    end)
+                end
+            end
+        elseif TypeQuest == 'Completed' and TiggerStop2 then
+            if NPC == "Bread" then
+                print('Completed')
+                
+                    if _G.PData.QuestNPC[NPC].Complish then
+                        QuestFrame.QuestIcon.QuestIcon2.ImageLabel.Image = DialogsModuleFolder.QuesetDialog[NPC].QusetTable[_G.PData.QuestNPC[NPC].TotalQuest].Icon
+                        QuestFrame.QuestNumber.QuestNumber2.TextLabel.Text = _G.PData.QuestNPC[NPC].TotalQuest
+                        _G.PData.QuestNPC[NPC].NowQuest = true
+                        Remote.QuestRemote:FireServer(NPC) -- ! PData update
+                        QuestFrame.QusetTextNameNPC.QusetTextNameNPC2.TextLabel.Text = NPC
+                        ColorDown()
+                        ColorUp()
+                        OpenGuiQuest(QuestFrame) -- OpenMenu
+                        --TextPrint(BreadGui.Frame.TextLabel, 0.1, DialogsModule)
+                        Cam.CameraType = Enum.CameraType.Scriptable
+                        TW:Create(Cam,TweenInfo.new(0.5, Enum.EasingStyle.Linear,Enum.EasingDirection.InOut), {CFrame = workspace.QusetNPC.Bread.Camera.Part.CFrame}):Play()
+                        --TW:Create()
+                    -- TweenNow = TW:Create(Cam,TweenInfo.new(18, Enum.EasingStyle.Linear,Enum.EasingDirection.InOut),{CFrame = CameraFoder['Cam'..CameraNow].CFrame})
+                        QuestFrame.QusetFrameDiologs.QusetFrameText.TextFrame.Text = DialogsModule.NewQuset.QusetNPCDiologs1[QusetTable.TableIndex3.DiologOne]
+                        QuestFrame.QusetFrameDiologs.ButtonMouse.MouseButton1Click:Connect(function()
+                            --print(TableIndex.DiologOne)
+                            if QusetTable.TableIndex3.DiologOne < #DialogsModule.NewQuset.QusetNPCDiologs1 then
+                                ColorDown()
+                                ColorUp()
+                                QusetTable.TableIndex3.DiologOne += 1
+                                ButtonClick(QuestFrame)
+                                QuestFrame.QusetFrameDiologs.QusetFrameText.TextFrame.Text = DialogsModule.NewQuset.QusetNPCDiologs1[QusetTable.TableIndex3.DiologOne]
+                                --print(DialogsModule.NewQuset[Index])
+                                local NumberMax = math.max(#DialogsModule.NewQuset.QusetNPCDiologs1)
+                                if QusetTable.TableIndex3.DiologOne > NumberMax then
+                                    QusetTable.TableIndex3.DiologPlayer = 1
+                                    QuestFrame.QusetFrameDiologs.QusetFrameText.TextFrame.Text = DialogsModule.NewQuset.PlayerDiologs[QusetTable.TableIndex3.DiologPlayer]
+                                end
+                                -- #DialogsModule.NewQuset.QusetNPCDiologs1 -- ! это максимальное число
+                                
+        
+                            elseif QusetTable.TableIndex3.DiologPlayer < #DialogsModule.NewQuset.PlayerDiologs then
+                                local content = game.Players:GetUserThumbnailAsync(game.Players.LocalPlayer.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size48x48)
+                                QuestFrame.QuestIcon.QuestIcon2.ImageLabel.Image = content
+                                QusetTable.TableIndex3.DiologPlayer += 1
+                                ColorDownNPC()
+                                ColorUpNPC()
+                                ButtonClick(QuestFrame)
+                                QuestFrame.QusetFrameDiologs.QusetFrameText.TextFrame.Text = DialogsModule.NewQuset.PlayerDiologs[QusetTable.TableIndex3.DiologPlayer]
+                                local NumberMax = math.max(#DialogsModule.NewQuset.PlayerDiologs)
+                                if QusetTable.TableIndex3.DiologPlayer > NumberMax then
+                                    QusetTable.TableIndex3.DiologTwo = 1
+                                    QuestFrame.QusetFrameDiologs.QusetFrameText.TextFrame.Text = DialogsModule.NewQuset.QusetNPCDiologs2[QusetTable.TableIndex3.DiologTwo]
+                                end
+        
+                            elseif QusetTable.TableIndex.DiologTwo < #DialogsModule.NewQuset.QusetNPCDiologs2 then
+                                QuestFrame.QuestIcon.QuestIcon2.ImageLabel.Image = DialogsModuleFolder.QuesetDialog[NPC].QusetTable[_G.PData.QuestNPC[NPC].TotalQuest].Icon
+                                ColorDown()
+                                ColorUp()
+                                QusetTable.TableIndex3.DiologTwo += 1
+                                ButtonClick(QuestFrame)
+                                QuestFrame.QusetFrameDiologs.QusetFrameText.TextFrame.Text = DialogsModule.NewQuset.QusetNPCDiologs2[QusetTable.TableIndex3.DiologTwo]
+                                local NumberMax = math.max(#DialogsModule.NewQuset.QusetNPCDiologs2)
+                                if QusetTable.TableIndex3.DiologTwo >= NumberMax then
+                                    CloseGuiQuest(QuestFrame)
+                                    Cam.CameraType = Enum.CameraType.Custom
+                                    TaskQuset(NPC)
+                                    task.wait(0.3)
+                                    Remote.QuestComplish:FireServer(NPC)
+                                --  TableIndex.DiologOne = 1
+                                --  TableIndex.DiologPlayer = 0
+                                --  TableIndex.DiologTwo = 0
+        
+                                    TiggerStop = true
+                                    NofficalModule:NewQuest(NPC)
+                                    GuiQuset:NewQuestGUI(DialogsModuleFolder.QuesetDialog[NPC].QusetTable[_G.PData.QuestNPC[NPC].TotalQuest])
+                                    print(TiggerStop)
+                                end
+                            end
+                        end)
+                    end      
+                end
+        elseif TypeQuest == 'EventQuest' then
+            if NPC == '' then
+                print('Event')
+            end
+        elseif TypeQuest == 'NoQuset' then --! Дописать
+            if NPC == 'Bread' then
+                local NumberMax = math.max(#DialogsModuleFolder.QuesetDialog[NPC].QusetTable)
+                if _G.PData.QuestNPC[NPC].TotalQuest == NumberMax then
+                    ColorDown()
+                    ColorUp()
+                    OpenGuiQuest(QuestFrame)
+                end
             end
         end
     end
 end
+
 --[[
 function TextPrint(ObjectGui, TimeWrite, DialogsModule)
         for i = 1, #DialogsModule, 1 do
