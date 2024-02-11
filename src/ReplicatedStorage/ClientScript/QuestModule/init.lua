@@ -6,7 +6,7 @@ local TWS = require(game.ReplicatedStorage:WaitForChild('Libary').TweenService)
 local DialogsModuleFolder = require(game.ReplicatedStorage:WaitForChild('ClientScript').QuestModule.DiaolgsNPC)
 local NofficalModule = require(game.ReplicatedStorage.ClientScript.Notifical)
 local GuiQuset = require(script.Parent.OpenGui)
-local FrameQuset = game:GetService('ReplicatedStorage').QusetFrame.FrameQuset  -- QusetFrame in Gui Task
+local FrameQuset = game:GetService('ReplicatedStorage').Assert.QusetFrame.FrameQuset  -- QusetFrame in Gui Task
 
 repeat 
     _G.PData = game.ReplicatedStorage.Remote.GetDataSave:InvokeServer()
@@ -27,12 +27,18 @@ local QuestModule = {}
 
 QuestModule.ColorQuset = { -- ! Подумать насчет разных тем 
     ColorQusetFrame = {
-        ['Bread'] = {Color3.fromRGB(000)},
+        ["Bread"] = {
+            ["Down"] = Color3.fromRGB(143, 84, 36),
+            ["Up"] = Color3.fromRGB(110, 65, 28)
+        },
+
         ['Snail'] = {Color3.fromRGB(000)},
-        ['Vladislov'] = {Color3.fromRGB(000)},
+        ['Vladislov'] = {Color3.fromRGB(000)}
     }
 }
-
+print(QuestModule.ColorQuset.ColorQusetFrame['Bread'])
+print(QuestModule.ColorQuset.ColorQusetFrame)
+print(QuestModule.ColorQuset)
 function CheckMouse() --* Иконка мышки включить
     local UIS = game:GetService("UserInputService")
     if UIS.MouseBehavior == Enum.MouseBehavior.LockCenter then
@@ -104,12 +110,11 @@ function TaskQuset(NPC)
     end
 end
 
-
 function ButtonClick(Button)
     TWS:BittonClick(Button)
 end
 
-function NewQuestNPC(TypeQuest, NPC)
+function NewQuestNPC(TypeQuest, NPC) -- ! Добавить и проверить квесты
     local Index = 1
     
     if not DialogsModuleFolder.QuesetDialog[NPC].QusetTable[_G.PData.QuestNPC[NPC].TotalQuest] then
@@ -118,29 +123,37 @@ function NewQuestNPC(TypeQuest, NPC)
     else
         local DialogsModule = DialogsModuleFolder.QuesetDialog[NPC].QusetTable[_G.PData.QuestNPC[NPC].TotalQuest].Dialogs
         TaskQuset(NPC)
+        
         if TypeQuest == 'NewQuest' then
         if NPC == "Bread" then
             if not _G.PData.QuestNPC[NPC].NowQuest then
                 _G.PData.QuestNPC[NPC].NowQuest = true
                 Remote.QuestRemote:FireServer(NPC) -- ! PData update
+                local function ColorDown()
+                    QuestModule.ColorQuset.ColorQusetFrame['Bread'].Down = QuestFrame.QuestIcon.BackgroundColor3
+                    QuestModule.ColorQuset.ColorQusetFrame['Bread'].Down = QuestFrame.QuestNumber.BackgroundColor3 
+                    QuestModule.ColorQuset.ColorQusetFrame['Bread'].Down = QuestFrame.QusetFrameDiologs.BackgroundColor3
+                    QuestModule.ColorQuset.ColorQusetFrame['Bread'].Down = QuestFrame.QusetTextNameNPC.BackgroundColor3
+                end
 
                 
-                OpenGuiQuest(BreadGui) -- OpenMenu
+                ColorDown()
+                OpenGuiQuest(QuestFrame) -- OpenMenu
                 --TextPrint(BreadGui.Frame.TextLabel, 0.1, DialogsModule)
 
-                BreadGui.Frame.TextLabel.Text = DialogsModule.NewQuset[Index]
-                BreadGui.ButtonQuest.MouseButton1Click:Connect(function()
+               QuestFrame.QusetFrameDiologs.QusetFrameText.TextFrame.Text = DialogsModule.NewQuset[Index]
+                QuestFrame.ButtonQuest.MouseButton1Click:Connect(function()
                     Index += 1
                     if Index > #DialogsModule.NewQuset then --// Счет по [1]...
                         GuiQuset:NewQuestGUI(DialogsModuleFolder.QuesetDialog[NPC].QusetTable[_G.PData.QuestNPC[NPC].TotalQuest])
-                        CloseGuiQuest(BreadGui)
+                        CloseGuiQuest(QuestFrame)
                         Index = 1
                         task.wait(0.3)
                         NofficalModule:NewQuest(NPC)
                     else
-                        ButtonClick(BreadGui)
+                        ButtonClick(QuestFrame)
                         --print(DialogsModule.NewQuset[Index])
-                        BreadGui.Frame.TextLabel.Text = DialogsModule.NewQuset[Index]
+                        QuestFrame.Frame.TextLabel.Text = DialogsModule.NewQuset[Index]
                         --TextPrint(BreadGui.Frame.TextLabel, 0.1, DialogsModule.NewQuset[Index])
                     end
                 end)
@@ -155,17 +168,17 @@ function NewQuestNPC(TypeQuest, NPC)
             if _G.PData.QuestNPC[NPC].NowQuest then
                 _G.PData.QuestNPC[NPC].NowQuest = true
                 _G.PData.QuestNPC[NPC].Complish = true
-                OpenGuiQuest(BreadGui)
-                BreadGui.Frame.TextLabel.Text = DialogsModule.OldQuset[Index]
-                BreadGui.ButtonQuest.MouseButton1Click:Connect(function()
+                OpenGuiQuest(QuestFrame)
+                QuestFrame.Frame.TextLabel.Text = DialogsModule.OldQuset[Index]
+                QuestFrame.ButtonQuest.MouseButton1Click:Connect(function()
                     Index += 1
                     if Index > #DialogsModule.OldQuset then --// Счет по [1]...
-                        CloseGuiQuest(BreadGui)
+                        CloseGuiQuest(QuestFrame)
                         Index = 1 
                     else
-                        ButtonClick(BreadGui)
+                        ButtonClick(QuestFrame)
                         --print(DialogsModule.OldQuset[Index])
-                        BreadGui.Frame.TextLabel.Text = DialogsModule.OldQuset[Index]
+                        QuestFrame.Frame.TextLabel.Text = DialogsModule.OldQuset[Index]
                         --TextPrint(BreadGui.Frame.TextLabel, 0.1, DialogsModule.OldQuset[Index])
                     end
     
@@ -177,16 +190,16 @@ function NewQuestNPC(TypeQuest, NPC)
             print('OldQuest')
             print(_G.PData.QuestNPC[NPC].Complish)
             Remote.QuestComplish:FireServer(NPC)
-                OpenGuiQuest(BreadGui)
-                BreadGui.Frame.TextLabel.Text = DialogsModule.Completed[Index]
-                BreadGui.ButtonQuest.MouseButton1Click:Connect(function()
+                OpenGuiQuest(QuestFrame)
+                QuestFrame.Frame.TextLabel.Text = DialogsModule.Completed[Index]
+                QuestFrame.ButtonQuest.MouseButton1Click:Connect(function()
                     Index += 1
                     if Index > #DialogsModule.Completed then --// Счет по [1]...
-                        CloseGuiQuest(BreadGui)
+                        CloseGuiQuest(QuestFrame)
                         Index = 1
                     else
-                        ButtonClick(BreadGui)
-                        BreadGui.Frame.TextLabel.Text = DialogsModule.Completed[Index]
+                        ButtonClick(QuestFrame)
+                        QuestFrame.Frame.TextLabel.Text = DialogsModule.Completed[Index]
                         --TextPrint(BreadGui.Frame.TextLabel, 0.1, DialogsModule.Completed[Index])
                     end
     
