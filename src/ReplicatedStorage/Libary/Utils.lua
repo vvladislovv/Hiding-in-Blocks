@@ -15,4 +15,30 @@ function Utils:CommaNumber(Num) -- ! Раздел на милионы и тп
     return Num:reverse():gsub("%d%d%d", "%1,"):reverse():gsub("^,", "")
 end
 
+
+function Utils:GetTableNum(Table, Type)
+    local v1 = 0
+
+    for i, Challenge in pairs(Table) do
+        --print(Challenge)
+        v1 += Challenge[Type]
+    end
+    --print(v1)
+    return v1
+end
+
+function Utils:DeepCopy(Table)
+    local Clone = {}
+
+    for key, value in pairs(Table) do
+        if typeof(value) == "table" then
+            Clone[key] = Utils:DeepCopy(value)
+        else
+            Clone[key] = value
+        end
+    end
+
+    return Clone
+end
+
 return Utils

@@ -35,7 +35,14 @@ Dualogs.QuesetDialog = {
     },
     ["Bread"] = {
         Name = 'Bread',
-        NoQuset = '', --// Если не стоят квесты или нет квестов 
+        Icon = "rbxassetid://16312164831",
+        NoQuset = {
+            "Hello, My quest Stop",
+            "Hello, My quest Stop2",
+            "Hello, My quest Stop3",
+            "Hello, My quest Stop4",
+            "Hello, My quest Stop5"
+        }, --// Если не стоят квесты или нет квестов 
         QusetTable = {
             [1] = {
                 Icon = "rbxassetid://16312164831",
@@ -107,30 +114,30 @@ Dualogs.QuesetDialog = {
                 Task = { -- // Задание 
                     {
                         Type = "CollectCoin", -- ! Collect snalik
-                        StartAmt = "0",
-                        NeedAmt = "100",
+                        StartAmt = 0,
+                        NeedAmt = 100,
                     },
 
                     {
                         Type = "KillHilder", --! Kill Hilder
-                        StartAmt = "0",
-                        NeedAmt = "10",
+                        StartAmt = 0,
+                        NeedAmt = 10,
                     },
                     {
                         Type = "KillSeeker", -- ! Kill Seeker
-                        StartAmt = "0",
-                        NeedAmt = "10",
+                        StartAmt = 0,
+                        NeedAmt = 10,
                     },
                     {
                         Type = "CollectTokenMap", -- ! Collect token at map
-                        StartAmt = "0",
-                        NeedAmt = "100",
+                        StartAmt = 0,
+                        NeedAmt = 100,
                     },
 
                     {
                         Type = "TimeGame", --! Timer
-                        StartAmt = "0 min",
-                        NeedAmt = "1 hour",
+                        StartAmt = 0,
+                        NeedAmt = 3600,
                     },
                 },
 

@@ -20,12 +20,13 @@ function Data.new(Player)
 		
         
 	}
+	PData.QuestTaskNPC = {}
     PData.QuestNPC = {
         ['Vladislov'] = {
 		NowQuest = false, --// Новый квест
 		Complish = false, --// Настоящий квест
 		QuestEvent = false, --// Праздничный квест
-		TotalQuest = 0 --// Всего
+		TotalQuest = 1 --// Всего
 		},
         ['Bread'] = {NowQuest = false, Complish = false, QuestEvent = false, TotalQuest = 1, NoQuset = false},
 		['Snail'] = {NowQuest = false,Complish = false, QuestEvent = false, TotalQuest = 1, NoQuset = false},
@@ -62,8 +63,8 @@ end
 
 local AutoSaves = {}
 
-local MainKey = 'DataMainServerAlifa1364sreswer3ds'
-local ClientKey = 'DataMainClientAlifa1364sreswer3ds'
+local MainKey = 'DataMainServerAlifa1364sreswer3dsasdfa'
+local ClientKey = 'DataMainClientAlifa1364sreswer3dsasdfasd'
 
 local DataStore2 = require(game.ServerScriptService.DataStore2)
 
