@@ -127,53 +127,59 @@ function TaskQuset(NPC) -- ! Надо сделать гуи
     FrameQusetAll.FrameQusetFrame.FrameQusetFrameUper.IconFrame.ImageLabel.Image = QusetInfoModule.Icon
     FrameQusetAll.FrameQusetFrame.FrameQusetFrameUper.NumberFrame.TextLabel.Text = _G.PData.QuestNPC[NPC].TotalQuest
 
-    local FrameTask = ReplicatedStorage.Assert.QusetFrame.FrameTask:Clone()
-    FrameTask.Parent = FrameQusetAll.FrameQusetFrame.FrameTaskSize
-
-    local TextQusetTask = FrameTask.FrameTaskDown.TextQusetTask -- * NameQuset
-    local TextQusetTaskPresent = FrameTask.FrameTaskDown.TextQusetTaskPresent -- * Present
     for i, v in pairs(QusetInfoModule.Task) do
+        local FrameTask = ReplicatedStorage.Assert.QusetFrame.FrameTask:Clone()
+        FrameTask.Parent = FrameQusetAll.FrameQusetFrame.FrameSize
+        local TextQusetTask = FrameTask.FrameTaskDown.TextQusetTask -- * NameQuset
+        local TextQusetTaskPresent = FrameTask.FrameTaskDown.TextQusetTaskPresent -- * Present
+        print(QusetInfoModule.Task)
         if i > 1 then -- ! Gui Need scriptTask
-            FrameQusetAll.FrameQusetFrame.FrameTaskSize.Size = UDim2.new()
-            FrameQusetAll.Size = UDim2.new()
+            print(i)
+            FrameQusetAll.FrameQusetFrame.FrameSize.Size = UDim2.new(0,318,0,FrameQusetAll.FrameQusetFrame.FrameSize.Size.Y.Offset + 95 ) --* Размер поля в gui
+            print(FrameQusetAll.FrameQusetFrame.FrameSize)
+            --FrameQusetAll.FrameQusetFrame.FrameTaskSize.Size.Y.Offset
+            --FrameQusetAll.FrameQusetFrame.FrameSize.Size = UDim2.new(1,0,0,FrameTask.Size.Y.Offset + 67) -- Размер каждого задания
             --!  print(i) -- number
              print(v) -- Task
         end
-        FrameQusetAll.Name = QusetInfoModule.NameQuset.."-".._G.PData.QuestNPC[NPC].TotalQuest
-        FrameQusetAll.Parent = UI.Tabs.QusetTabs.QusetTabs.Frame.ScrollingFrame
-        print(v)
+    
         local NdAmt
         local StAmt
-        print(v.StartAmt)
-        print(v.NeedAmt)
+
+        print(NdAmt)
+        print(StAmt)
+
         if v.StartAmt >= 100000000000000 then
             StAmt = Utils:Prefix(v.StartAmt)
+            warn(StAmt)
         else
             StAmt = Utils:CommaNumber(v.StartAmt)
+            print(StAmt)
         end
 
         if v.NeedAmt >= 100000000000000 then
-            NdAmt = Utils:Prefix(v.StartAmt)
+            NdAmt = Utils:Prefix(v.NeedAmt)
+            warn(NdAmt)
         else
-            NdAmt = Utils:CommaNumber(v.StartAmt)
+            NdAmt = Utils:CommaNumber(v.NeedAmt)
+            print(NdAmt)
         end
         
-
         if v.Type == "CollectCoin" then
             TextQusetTask.Text = "Collect Coin on map:"
-            TextQusetTaskPresent.Text = StAmt.." / "..NdAmt
+            TextQusetTaskPresent.Text = StAmt.."/"..NdAmt
             --print("CollectCoin")
         elseif v.Type == "KillSeeker" then
             TextQusetTask.Text = "Kill the seeker in the game:"
-            TextQusetTaskPresent.Text = StAmt.." / "..NdAmt
+            TextQusetTaskPresent.Text = StAmt.."/"..NdAmt
            -- print("KillHilder")
-        elseif v.Type == "KillSeeker" then -- ! hiding
+        elseif v.Type == "KillHilder" then -- ! hiding
             TextQusetTask.Text = "Kill the hiding in the game:"
-            TextQusetTaskPresent.Text = StAmt.." / "..NdAmt
+            TextQusetTaskPresent.Text = StAmt.."/"..NdAmt
           --  print("KillSeeker")
         elseif v.Type == "CollectTokenMap" then
             TextQusetTask.Text = "Collect Token on Map:"
-            TextQusetTaskPresent.Text = StAmt.." / "..NdAmt
+            TextQusetTaskPresent.Text = StAmt.."/"..NdAmt
           --  print("CollectTokenMap")
         elseif v.Type == "TimeGame" then
             TextQusetTask.Text = "Play this game for so long:"
@@ -181,7 +187,8 @@ function TaskQuset(NPC) -- ! Надо сделать гуи
            -- print("TimeGame")
         end
     end
-    
+    FrameQusetAll.Name = QusetInfoModule.NameQuset.."-".._G.PData.QuestNPC[NPC].TotalQuest
+    FrameQusetAll.Parent = UI.Tabs.QusetTabs.QusetTabs.Frame.ScrollingFrame
 end
 
 function ButtonClick(Button)

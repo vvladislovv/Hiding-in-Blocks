@@ -128,7 +128,7 @@ Dualogs.QuesetDialog = {
                         StartAmt = 0,
                         NeedAmt = 10,
                     },
-                    {
+                    --[[{
                         Type = "CollectTokenMap", -- ! Collect token at map
                         StartAmt = 0,
                         NeedAmt = 100,
@@ -138,7 +138,7 @@ Dualogs.QuesetDialog = {
                         Type = "TimeGame", --! Timer
                         StartAmt = 0,
                         NeedAmt = 3600,
-                    },
+                    },]]
                 },
 
                 Rewards = { --// Награда за квесты 

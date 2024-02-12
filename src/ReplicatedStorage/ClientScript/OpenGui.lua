@@ -257,6 +257,41 @@ MouseSizeButton()
         end
     end
 
+function QuestGui:QuestFrameTask(Player) --! Дописать FillBarr
+    for NPCname, In in pairs(_G.PData.QuestNPC) do
+        if game.Workspace.QusetNPC:FindFirstChild(NPCname) then
+            if In.NowQuest and not In.Complish then
+                
+                local QusetFrame = UI.Tabs.QusetTabs.QusetTabs.Frame.ScrollingFrame
+                for _, QusetIndex in pairs(QusetFrame:GetChildren()) do
+                  --  print(QusetIndex)
+                    if QusetIndex:IsA("Frame") then
+                        --print('fff')
+                       -- print(QusetIndex.FrameQusetFrame.FrameSize:FindFirstChild("FrameTask"))
+                        if QusetIndex.FrameQusetFrame.FrameSize:FindFirstChild("FrameTask") then
+                            ---print(QusetIndex:FindFirstChild("FrameTask"))
+                            for k, TaskFrame in pairs(QusetIndex.FrameQusetFrame.FrameSize:FindFirstChild("FrameTask"):GetChildren()) do
+                                if TaskFrame:IsA('Frame') then
+                                    local Barr = TaskFrame:FindFirstChild('FillBar')
+                                    if _G.PData.QuestTaskNPC ~= nil then
+                                        print(k)
+                                        print(_G.PData.QuestTaskNPC[TaskFrame.Name][k-3])--.StartAmt
+                                        local mathFullBarr = math.clamp(_G.PData.QuestTaskNPC[TaskFrame.Name])
+                                    end
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+end
+
+game:GetService("RunService").RenderStepped:Connect(function()
+    QuestGui:QuestFrameTask(Player)
+end)
+
 function QuestGui:NewQuestGUI(Info)
     if Info then
         print(Info)

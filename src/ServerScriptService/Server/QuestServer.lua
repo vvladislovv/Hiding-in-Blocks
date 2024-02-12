@@ -61,7 +61,7 @@ function CheckQuset(Player, PData)
             for NpcName, NPC in pairs(PData.QuestTaskNPC) do
                 for _, Task in pairs(NPC) do
                     --print(PData.QuestTaskNPC)
-                    --print(Task)
+                    print(Task)
                     local GetStarter = Utils:GetTableNum(NPC, "StartAmt")
                     local GetNeeds = Utils:GetTableNum(NPC, "NeedAmt")
                     if GetStarter >= GetNeeds and PData.QuestNPC[NpcName].Complish == false then
