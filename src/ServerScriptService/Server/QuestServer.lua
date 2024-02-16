@@ -16,17 +16,20 @@ Remote.QuestRemote.OnServerEvent:Connect(function(plr, NPC)
         print(PData.QuestTaskNPC[NPC])
         PData.QuestNPC[NPC].NowQuest = true
         PData:Update('QuestNPC', PData.QuestNPC)
+        PData:Update('QuestTaskNPC', PData.QuestTaskNPC)
         print(PData.QuestNPC[NPC].NowQuest)
     elseif NPC == 'VladislovNPC' then
         PData.QuestTaskNPC[NPC] = Utils:DeepCopy(Diologs[NPC].QusetTable[PData.QuestNPC[NPC].TotalQuest].Task)
         PData.QuestNPC[NPC].NowQuest = true
         PData:Update('QuestNPC', PData.QuestNPC)
+        PData:Update('QuestTaskNPC', PData.QuestTaskNPC)
         print(PData.QuestNPC[NPC].NowQuest)
     
     elseif NPC == 'SnailNPC' then
         PData.QuestTaskNPC[NPC] = Utils:DeepCopy(Diologs[NPC].QusetTable[PData.QuestNPC[NPC].TotalQuest].Task)
         PData.QuestNPC[NPC].NowQuest = true
         PData:Update('QuestNPC', PData.QuestNPC)
+        PData:Update('QuestTaskNPC', PData.QuestTaskNPC)
         print(PData.QuestNPC[NPC].NowQuest)
     end
 end)
@@ -39,12 +42,13 @@ Remote.QuestComplish.OnServerEvent:Connect(function(plr, NPC)
         PData.QuestNPC[NPC].NowQuest = false
         PData.QuestNPC[NPC].TotalQuest += 1
         PData:Update('QuestNPC', PData.QuestNPC)
-
+        PData:Update('QuestTaskNPC', PData.QuestTaskNPC)
     elseif NPC == 'VladislovNPC' then
         PData.QuestNPC[NPC].Complish = false
         PData.QuestNPC[NPC].NowQuest = false
         PData.QuestNPC[NPC].TotalQuest += 1
         PData:Update('QuestNPC', PData.QuestNPC)
+        PData:Update('QuestTaskNPC', PData.QuestTaskNPC)
         print(PData.QuestNPC[NPC].NowQuest)
     
     elseif NPC == 'SnailNPC' then
@@ -52,16 +56,18 @@ Remote.QuestComplish.OnServerEvent:Connect(function(plr, NPC)
         PData.QuestNPC[NPC].NowQuest = false
         PData.QuestNPC[NPC].TotalQuest += 1
         PData:Update('QuestNPC', PData.QuestNPC)
+        PData:Update('QuestTaskNPC', PData.QuestTaskNPC)
         print(PData.QuestNPC[NPC].NowQuest)
     end
 end)
+
 function CheckQuset(Player, PData)
     task.spawn(function()
         while Player do task.wait(1)
             for NpcName, NPC in pairs(PData.QuestTaskNPC) do
                 for _, Task in pairs(NPC) do
                     --print(PData.QuestTaskNPC)
-                    print(Task)
+                   -- print(Task)
                     local GetStarter = Utils:GetTableNum(NPC, "StartAmt")
                     local GetNeeds = Utils:GetTableNum(NPC, "NeedAmt")
                     if GetStarter >= GetNeeds and PData.QuestNPC[NpcName].Complish == false then

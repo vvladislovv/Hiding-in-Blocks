@@ -119,9 +119,9 @@ function NPCFind(NPC) --* Проверка на каком этапе квес �
     return TypeQuest
 end
 
-function TaskQuset(NPC) -- ! Надо сделать гуи
+function TaskQuset(NPC) 
     local QusetInfoModule = DialogsModuleFolder.QuesetDialog[NPC].QusetTable[_G.PData.QuestNPC[NPC].TotalQuest]
-    print(QusetInfoModule)
+    --print(QusetInfoModule)
     local FrameQusetAll = ReplicatedStorage.Assert.QusetFrame.FrameQuset:Clone()
     FrameQusetAll.FrameQusetFrame.FrameQusetFrameUper.TextLabel.Text = QusetInfoModule.NameQuset
     FrameQusetAll.FrameQusetFrame.FrameQusetFrameUper.IconFrame.ImageLabel.Image = QusetInfoModule.Icon
@@ -129,40 +129,41 @@ function TaskQuset(NPC) -- ! Надо сделать гуи
 
     for i, v in pairs(QusetInfoModule.Task) do
         local FrameTask = ReplicatedStorage.Assert.QusetFrame.FrameTask:Clone()
+        --FrameTask.Name = NPC
         FrameTask.Parent = FrameQusetAll.FrameQusetFrame.FrameSize
         local TextQusetTask = FrameTask.FrameTaskDown.TextQusetTask -- * NameQuset
         local TextQusetTaskPresent = FrameTask.FrameTaskDown.TextQusetTaskPresent -- * Present
-        print(QusetInfoModule.Task)
+        --print(QusetInfoModule.Task)
         if i > 1 then -- ! Gui Need scriptTask
-            print(i)
+            --print(i)
             FrameQusetAll.FrameQusetFrame.FrameSize.Size = UDim2.new(0,318,0,FrameQusetAll.FrameQusetFrame.FrameSize.Size.Y.Offset + 95 ) --* Размер поля в gui
-            print(FrameQusetAll.FrameQusetFrame.FrameSize)
+--print(FrameQusetAll.FrameQusetFrame.FrameSize)
             --FrameQusetAll.FrameQusetFrame.FrameTaskSize.Size.Y.Offset
             --FrameQusetAll.FrameQusetFrame.FrameSize.Size = UDim2.new(1,0,0,FrameTask.Size.Y.Offset + 67) -- Размер каждого задания
             --!  print(i) -- number
-             print(v) -- Task
+             --print(v) -- Task
         end
     
         local NdAmt
         local StAmt
 
-        print(NdAmt)
-        print(StAmt)
+       -- print(NdAmt)
+        --print(StAmt)
 
         if v.StartAmt >= 100000000000000 then
             StAmt = Utils:Prefix(v.StartAmt)
-            warn(StAmt)
+          --  warn(StAmt)
         else
             StAmt = Utils:CommaNumber(v.StartAmt)
-            print(StAmt)
+         --   print(StAmt)
         end
 
         if v.NeedAmt >= 100000000000000 then
             NdAmt = Utils:Prefix(v.NeedAmt)
-            warn(NdAmt)
+          --  warn(NdAmt)
         else
             NdAmt = Utils:CommaNumber(v.NeedAmt)
-            print(NdAmt)
+          --  print(NdAmt)
         end
         
         if v.Type == "CollectCoin" then
@@ -517,7 +518,6 @@ end
 function TextPrint(ObjectGui, TimeWrite, DialogsModule)
         for i = 1, #DialogsModule, 1 do
             ObjectGui.Text = string.sub(DialogsModule, 1, i)
-        task.wait(TimeWrite) 
     end
 end
 ]]

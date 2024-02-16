@@ -259,9 +259,9 @@ MouseSizeButton()
 
 function QuestGui:QuestFrameTask(Player) --! Дописать FillBarr
     for NPCname, In in pairs(_G.PData.QuestNPC) do
+       -- print(NPCname)
         if game.Workspace.QusetNPC:FindFirstChild(NPCname) then
             if In.NowQuest and not In.Complish then
-                
                 local QusetFrame = UI.Tabs.QusetTabs.QusetTabs.Frame.ScrollingFrame
                 for _, QusetIndex in pairs(QusetFrame:GetChildren()) do
                   --  print(QusetIndex)
@@ -270,13 +270,27 @@ function QuestGui:QuestFrameTask(Player) --! Дописать FillBarr
                        -- print(QusetIndex.FrameQusetFrame.FrameSize:FindFirstChild("FrameTask"))
                         if QusetIndex.FrameQusetFrame.FrameSize:FindFirstChild("FrameTask") then
                             ---print(QusetIndex:FindFirstChild("FrameTask"))
-                            for k, TaskFrame in pairs(QusetIndex.FrameQusetFrame.FrameSize:FindFirstChild("FrameTask"):GetChildren()) do
+                            for k, TaskFrame in pairs(QusetIndex.FrameQusetFrame:FindFirstChild("FrameSize"):GetChildren()) do
                                 if TaskFrame:IsA('Frame') then
+                                    --print(QusetIndex)
+                                    --print(TaskFrame)
                                     local Barr = TaskFrame:FindFirstChild('FillBar')
                                     if _G.PData.QuestTaskNPC ~= nil then
-                                        print(k)
-                                        print(_G.PData.QuestTaskNPC[TaskFrame.Name][k-3])--.StartAmt
-                                        local mathFullBarr = math.clamp(_G.PData.QuestTaskNPC[TaskFrame.Name])
+                                        local function UpdateBarr()
+                                           -- top:TweenSize(UDim2.new(math.clamp(humanoid.Health / humanoid.MaxHealth, 0, 1), 0, 1, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Sine, 0.5, true)
+
+                                        end
+
+                                        for i, TaskNPC in pairs(_G.PData.QuestTaskNPC[NPCname]) do
+                                            local mathFullBarr = math.clamp(TaskNPC.StartAmt / TaskNPC.NeedAmt, 0,1)
+                                           -- print(mathFullBarr)
+                                            --print(TaskFrame)
+                                            if TaskFrame.FrameTaskDown:FindFirstChild('FillBar') then
+                                                TaskFrame.FrameTaskDown.FillBar:TweenSize(UDim2.new(mathFullBarr, mathFullBarr, 0, 55), Enum.EasingDirection.Out, Enum.EasingStyle.Sine, 0.5, true)
+                                            end
+                                        end
+                                        ---print(_G.PData.QuestTaskNPC[NPCname][1])--.StartAmt
+                                        --local mathFullBarr = math.clamp(_G.PData.QuestTaskNPC[TaskFrame.Name].)
                                     end
                                 end
                             end
