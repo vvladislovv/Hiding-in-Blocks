@@ -3,7 +3,7 @@ local Utils = {}
 local Prefix = {"","k","M","B","T","qd"}
 
 function Utils:Prefix(Num) --! Сокращение 
-    print(Num)
+    --print(Num)
     for i = 1, #Prefix do
         if Num < 10 ^ (i*3) then
             return math.floor(Num / ((10 ^ ((i - 1) * 3)) / 100)) / (100) .. Prefix[i]
@@ -12,7 +12,7 @@ function Utils:Prefix(Num) --! Сокращение
 end
 
 function Utils:CommaNumber(Num) -- ! Раздел на милионы и тп
-    print(Num)
+    --print(Num)
     Num = tostring(Num)
     return Num:reverse():gsub("%d%d%d", "%1,"):reverse():gsub("^,", "")
 end

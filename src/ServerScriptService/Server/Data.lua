@@ -17,7 +17,8 @@ function Data.new(Player)
         CollectPassToken = 0,
 		HyderKillBlock = 0,
 		QuestAll = 0, --// перевезать на TotalQuest
-		
+		Timer = 0,
+		SeekerKillBlock = 0
         
 	}
 	PData.QuestTaskNPC = {}
@@ -63,8 +64,8 @@ end
 
 local AutoSaves = {}
 
-local MainKey = 'DataMainServerAlifa1364sreswer3dsasdfa'
-local ClientKey = 'DataMainClientAlifa1364sreswer3dsasdfasd'
+local MainKey = 'DataMainServerAlifa136s4sreswer3dsasdfa'
+local ClientKey = 'DataMainClientAlifa136s4sreswer3dsasdfasd'
 
 local DataStore2 = require(game.ServerScriptService.DataStore2)
 

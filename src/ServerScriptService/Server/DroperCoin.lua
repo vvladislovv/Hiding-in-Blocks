@@ -34,6 +34,7 @@ for _, index in next, CoinFolder:GetChildren() do
 				Debounce = true
                 local PData = Data:Get(Player)
 				PData.BaseSettings.Sneliki += 1
+                PData.BaseSettings.CollectPassToken += 1
                 PData:Update('BaseSettings', PData.BaseSettings)
 				print(PData.BaseSettings.Sneliki)
                 RS.Remote.TokenClientAnim:FireClient(Player, index.coinClone)

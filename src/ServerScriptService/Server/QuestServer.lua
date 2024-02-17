@@ -13,6 +13,7 @@ Remote.QuestRemote.OnServerEvent:Connect(function(plr, NPC)
     if NPC == 'Bread' then
         PData.QuestTaskNPC[NPC] = Utils:DeepCopy(Diologs[NPC].QusetTable[PData.QuestNPC[NPC].TotalQuest].Task)
         CheckQuset(plr, PData)
+        QusetCheckCollect(PData, NPC)
         print(PData.QuestTaskNPC[NPC])
         PData.QuestNPC[NPC].NowQuest = true
         PData:Update('QuestNPC', PData.QuestNPC)
@@ -80,5 +81,16 @@ function CheckQuset(Player, PData)
     end)    
 end
 
+function QusetCheckCollect(PData, NPC) -- Coin collect snelick, Token map
+    if PData.QuestTaskNPC[NPC] then
+        for _, indexQuset in pairs(PData.QuestTaskNPC[NPC]) do
+            if indexQuset.Type == "CollectTokenMap" then
+                indexQuset.StartAmt = PData.BaseSettings.CollectPassToken
+                print(indexQuset.StartAmt)
+                PData:Update('QuestTaskNPC', PData.QuestTaskNPC)
+            end 
+        end
+    end
+end
 
 return QuestServer
